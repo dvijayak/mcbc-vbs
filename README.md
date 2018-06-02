@@ -6,5 +6,5 @@ For simplicity's sake, all components are currently being versioned together as 
 
 # Folder structure
 * mongodb - contains setup for the mongodb dev server
-* ng - source code of the Angular-based UI
+* mcbc-vbs-ui - source code of the Angular-based UI
 * nodejs - source code of the NodeJS-based server/backend
