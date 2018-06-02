@@ -21,7 +21,6 @@ import { FaqComponent } from './body/faq/faq.component';
         HomePageRoutingModule,
         ImportMaterializeModule
     ],
-    providers: [],
     entryComponents: [
         HomePageComponent
     ],

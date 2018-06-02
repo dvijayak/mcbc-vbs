@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HomePageModule } from './pages/home/home-page.module';
+import { LoginPageModule } from './pages/login/login-page.module';
 import { AppRoutingModule } from './app-routing.module';
 
 @NgModule({
@@ -20,6 +21,7 @@ import { AppRoutingModule } from './app-routing.module';
         HttpClientModule,
         ReactiveFormsModule,
         HomePageModule,
+        LoginPageModule,
         AppRoutingModule,
     ],
     providers: [
@@ -27,5 +29,4 @@ import { AppRoutingModule } from './app-routing.module';
     ],
     bootstrap: [AppComponent]
 })
-export class AppModule {
-}
+export class AppModule { }
