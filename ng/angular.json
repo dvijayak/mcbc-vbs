@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "ng": {
+    "mcbc-vbs-ui": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -95,7 +95,7 @@
         }
       }
     },
-    "ng-e2e": {
+    "mcbc-vbs-ui-e2e": {
       "root": "e2e/",
       "projectType": "application",
       "architect": {
@@ -123,5 +123,5 @@
       }
     }
   },
-  "defaultProject": "ng"
+  "defaultProject": "mcbc-vbs-ui"
 }
