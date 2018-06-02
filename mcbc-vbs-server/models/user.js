@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const crypto = require('crypto');
 
-const security = require(process.env.VBS2017_SECURITYCFG || "../security.config.dev");
+const security = require(process.env.VBS_SECURITYCFG || "../security.config.dev");
 
 const UserSchema = mongoose.Schema({
    username: String,

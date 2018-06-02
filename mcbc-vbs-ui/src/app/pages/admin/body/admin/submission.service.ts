@@ -1,19 +1,17 @@
-import { Injectable } from '@angular/core';
-import { Http, Headers, Response } from '@angular/http';
+import { Injectable, SecurityContext } from '@angular/core';
+import { Headers, Http, Response } from '@angular/http';
+import { DomSanitizer } from '@angular/platform-browser';
 
-import 'rxjs/add/operator/toPromise';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/mergeMap';
-import 'rxjs/add/operator/filter';
-
-class QueryOptions {
+export class SubmissionOptions {
+    serverUrl: string; // includes the protocol
     query: string;
     pretty: boolean;
     data: any;
 
-    constructor(options: any) {
+    constructor(serverUrl: string, query: string, options: any) {
         // Required
-        this.query = options.query;
+        this.serverUrl = serverUrl;
+        this.query = query;
 
         // Optional
         this.pretty = options.pretty || false;
@@ -21,31 +19,33 @@ class QueryOptions {
     }
 
     createUrl(): string {
-        let query = this.query;
+        let url = `${this.serverUrl}/api/${this.query}`;
 
         // CANIMPROVE: Really brittle - will need to be changed if we add more parameters
-        if (this.pretty)
-            query += '?pretty=true';
+        if (this.pretty) {
+            url += '?pretty=true';
+        }
 
-        return query;
+        return url;
     }
 }
 
 @Injectable()
 export class SubmissionService {
 
-    constructor(private http: Http) {
+    constructor(private http: Http,
+                private _sanitizer: DomSanitizer) {
     }
 
     // The result must be an array of submissions
-    getSubmissions(options): Promise<any> {
-        const query = new QueryOptions(options).createUrl();
+    getSubmissions(options: SubmissionOptions): Promise<any> {
+        const url = this._sanitizer.sanitize(SecurityContext.URL, options.createUrl());
 
         const headers = new Headers();
         headers.append('Content-Type', 'application/json');
         headers.append('Accept', 'application/json');
 
-        return this.http.get(`/api/${query}`, { headers: headers })
+        return this.http.get(url, { headers: headers })
             .map((res: Response) => res.json().data || {})
             .toPromise()
             .then(this.processData)
@@ -53,11 +53,13 @@ export class SubmissionService {
     }
 
     private processData(data) {
-        if (!data.submissions || !data.submissions.length)
+        if (!data.submissions || !data.submissions.length) {
             return Promise.resolve();
+        }
 
-        if (!data.headers)
+        if (!data.headers) {
             data.headers = {};
+        }
 
         // Provide headers where unprovided
         const sample = data.submissions[0];
@@ -69,18 +71,5 @@ export class SubmissionService {
 
         // We are good to go!
         return Promise.resolve(data);
-    }
-
-    putSubmission(options): Promise<any> {
-        const query = new QueryOptions(options).createUrl();
-
-        const headers = new Headers();
-        headers.append('Content-Type', 'application/json');
-
-        // CANIMPROVE: attach API token
-
-        return this.http.put(`/api/${query}`, options.data, { headers: headers })
-            .map((res: Response) => res.json().data || {})
-            .toPromise();
     }
 }

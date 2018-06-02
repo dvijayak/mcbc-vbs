@@ -1,4 +1,4 @@
-const DBConfig = require(process.env.VBS2017_DBCFG || "./db.config.dev");
+const DBConfig = require(process.env.VBS_DBCFG || "./db.config.dev");
 
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise; // Mongoose comes with mpromises by default, but we want to use ES6 native promises

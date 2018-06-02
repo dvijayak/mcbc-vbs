@@ -1,7 +1,7 @@
 <div id="datatable-container" class="center-align">
-   <div class="row">
-      <button mz-button (click)="onClickReload()">Reload</button>
-      <a mz-button [href]="csvDataUri" [download]="csvExportFilename">Export to CSV</a>
+   <div class="row controls">
+      <button mz-button (click)="onClickReload()" class="control">Reload</button>
+      <a mz-button [href]="csvDataUri" [download]="csvExportFilename" class="control">Export to CSV</a>
    </div>
    <div class="row">
       <ngx-datatable
@@ -15,7 +15,7 @@
          [rowHeight]="'auto'"
          [columnMode]="'force'"
          [scrollbarH]="true"
-         [sortType]="'single'"
+         [sortType]="'multi'"
       ></ngx-datatable>
    </div>
 </div>

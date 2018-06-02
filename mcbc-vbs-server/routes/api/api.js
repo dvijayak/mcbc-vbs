@@ -4,7 +4,7 @@ const path = require('path');
 
 const cors = require('cors');
 const corsOptions = {
-    origin: 'http://localhost:4200',
+    origin: 'http://localhost:4200', // Angular app's default port
     optionsSuccessStatus: 200
 };
 
@@ -16,8 +16,9 @@ const respond = ApiHelper.helper.respond;
 router.options('*', cors(corsOptions));
 
 // We must always be logged in prior to having access to read APIs
-router.get('*', function (req, res, next) {
-    if (req.isAuthenticated()) {
+router.get('*', cors(corsOptions), function (req, res, next) {
+    // TODO: DISABLED TEMP ONLY
+    if (true || req.isAuthenticated()) {
         [req, res] = ApiHelper.inject(req, res);
         return next();
     }
@@ -28,7 +29,7 @@ router.get('*', function (req, res, next) {
 // Update methods don't need username/password authentication but must still only
 // come from a valid source using a valid API token
 router.put('*', function (req, res, next) {
-    if (true) { // CANIMPROVE: authenticate against API token
+    if (true) { // TODO: authenticate against API token
         [req, res] = ApiHelper.inject(req, res);
         return next();
     }

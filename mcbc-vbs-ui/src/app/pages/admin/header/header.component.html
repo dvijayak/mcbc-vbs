@@ -1,5 +1,5 @@
 <mz-navbar>
-   <a href="/" class="brand-logo center"><i class="material-icons">home</i></a>
+   <a [routerLink]="['/']" class="brand-logo center"><i class="material-icons">home</i></a>
    <a href="#" class="left button-collapse" [id]="'btn-sidenav-demo'"><i class="material-icons">menu</i></a>
    <mz-navbar-item-container [align]="'left'">
       <mz-navbar-item><a class="btn waves-effect waves-light" (click)="onClickChildDataSource()">Children</a></mz-navbar-item>
@@ -12,7 +12,7 @@
    <!-- Duplication here is ugly but whatever, roll with it for now -->
    <mz-sidenav [id]="'sidenav-demo'" [backgroundClass]="'grey darken-4'" [collapseButtonId]="'btn-sidenav-demo'">
       <mz-sidenav-link>
-         <a href="/" class="btn green mcbc white-text"><i class="material-icons white-text">home</i></a>
+         <a [routerLink]="['/']" class="btn green mcbc white-text"><i class="material-icons white-text">home</i></a>
       </mz-sidenav-link>
       <mz-sidenav-link>
          <a class="btn waves-effect waves-light" (click)="onClickChildDataSource()">Children</a>
