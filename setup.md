@@ -18,4 +18,24 @@ It is best to use NVM (Node Version Manager) to install and manage NodeJS. Aside
 npm install -g @angular/cli
 ```
 
-## 
+## Setup MongoDB dev server
+
+### Install VirtualBox and Vagrant
+
+1. https://www.virtualbox.org/wiki/Downloads
+2. https://www.vagrantup.com/downloads.html
+
+We will use the VirtualBox provisioner with Vagrant, which is why it is needed.
+
+### Download the vagrant box for MongoDB (known as MongoBox)
+
+``` bash
+cd $THIS_REPO_ROOT
+git clone --recursive https://github.com/bobthecow/vagrant-mongobox.git mongobox
+```
+
+
+
+
+
+
