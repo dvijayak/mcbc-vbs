@@ -1,5 +1,5 @@
 export class AppConfig {
-    private _title: string;
+    private _title = '';
     public get title(): string {
         return this._title;
     }

@@ -1,0 +1,25 @@
+.row {
+   margin: 0;
+}
+
+#contents-container .row {
+   padding: 10px;
+}
+
+#contents-container .row>div {
+   padding: 10px;
+}
+
+#contact h3 {
+   color: #fff;
+}
+
+#contact span a {
+   margin-left: 5px;
+   margin-right: 5px;
+}
+
+#copyright-row {
+   padding-top: 10px;
+   padding-bottom: 10px;
+}
