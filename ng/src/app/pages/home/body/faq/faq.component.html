@@ -1,0 +1,18 @@
+<div>
+   <div class="center-align">
+      <h2 class="pink-text text-mcbc">Frequently Asked Questions</h2>
+   </div>
+   <mz-collapsible
+   [mode]="'accordion'"
+   [onClose]="closeFunctionCallback"
+   [onOpen]="openFunctionCallback"
+   [popout]="false">
+      <mz-collapsible-item
+      *ngFor="let faqItem of faqItems$ | async">
+         <mz-collapsible-item-header class="materialize-red"><i class="material-icons">play_arrow</i><p class="flow-text"><b>{{faqItem.header}}</b></p></mz-collapsible-item-header>
+         <mz-collapsible-item-body>
+            <p class="flow-text" [innerHTML]="faqItem.body"></p> <!-- need this weird innerHTML method in order to put in unescaped raw HTML -->
+         </mz-collapsible-item-body>
+      </mz-collapsible-item>
+   </mz-collapsible>
+</div>

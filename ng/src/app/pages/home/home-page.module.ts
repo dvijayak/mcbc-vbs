@@ -1,19 +1,25 @@
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { HomePageRoutingModule } from './home-page-routing.module';
+import { ImportMaterializeModule } from '../../import-materialize.module';
 import { HomePageComponent } from './home-page.component';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { HomeComponent } from './body/home/home.component';
-import { ImportMaterializeModule } from '../../import-materialize.module';
+import { FaqComponent } from './body/faq/faq.component';
 
 @NgModule({
     declarations: [
         HomePageComponent,
         HeaderComponent,
         FooterComponent,
-        HomeComponent
+        HomeComponent,
+        FaqComponent
     ],
     imports: [
-        ImportMaterializeModule,
+        CommonModule,
+        // HomePageRoutingModule,
+        ImportMaterializeModule
     ],
     providers: [
 
