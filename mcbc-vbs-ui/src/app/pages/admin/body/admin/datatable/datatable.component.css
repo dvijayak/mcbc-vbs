@@ -1,0 +1,16 @@
+/* The numbers 56px and 64px were observed of the materialize navbar height */
+
+
+#datatable-container {
+   width: 100%;
+
+   margin-top: 56px;
+   margin-bottom: 56px;
+}
+
+@media only screen and (min-width: 601px) {
+   #datatable-container {
+      margin-top: 64px;
+      margin-bottom: 64px;
+   }
+}
