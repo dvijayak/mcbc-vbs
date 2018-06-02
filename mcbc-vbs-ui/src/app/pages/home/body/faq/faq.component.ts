@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { FaqItem } from './model/faq-item';
 import { FAQITEMS } from './model/faq-items';
-import { ReplaySubject } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 @Component({
     selector: 'app-home-page-faq',
@@ -10,10 +10,9 @@ import { ReplaySubject } from 'rxjs';
     styleUrls: ['./faq.component.css']
 })
 export class FaqComponent implements OnInit {
-
-    public faqItems$ = new ReplaySubject<FaqItem>();
+    public faqItems$: Observable<Array<FaqItem>>;
 
     public ngOnInit(): void {
-        FAQITEMS.forEach(item => this.faqItems$.next(item));
+        this.faqItems$ = of(FAQITEMS);
     }
 }

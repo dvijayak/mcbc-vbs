@@ -6,7 +6,7 @@ import { HomeComponent } from './pages/home/body/home/home.component';
 
 const routes: Routes = [
     {
-        path: '**',
+        path: '',
         component: HomePageComponent,
         children: [
             {
@@ -27,6 +27,10 @@ const routes: Routes = [
             // },
         ]
     },
+    {
+        path: '**',
+        redirectTo: ''
+    }
     // // 404 not found
     // {
     //     path: '404',

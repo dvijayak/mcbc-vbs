@@ -7,6 +7,7 @@ import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { HomeComponent } from './body/home/home.component';
 import { FaqComponent } from './body/faq/faq.component';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
     declarations: [
@@ -19,6 +20,7 @@ import { FaqComponent } from './body/faq/faq.component';
     imports: [
         CommonModule,
         // HomePageRoutingModule,
+        RouterModule,
         ImportMaterializeModule
     ],
     providers: [
