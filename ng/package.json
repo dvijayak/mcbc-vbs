@@ -1,5 +1,6 @@
 {
-  "name": "ng",
+  "name": "mcbc-vbs-ui",
+  "description": "Website + Admin backend for MCBC VBS",
   "version": "0.1.0",
   "scripts": {
     "ng": "ng",
