@@ -7,11 +7,12 @@
     },
     "scripts": {
         "ng": "ng",
-        "start": "cross-var ng serve $npm_package_config_project --poll 2000 --progress --watch --port 4200",
-        "build": "cross-var ng build $npm_package_config_project",
-        "setup:inotify": "cross-var sh ./scripts/increase-inotify-limit.sh",
-        "serve": "cross-var cd dist/ng && lite-server",
-        "dev": "cross-var run-s build setup:inotify serve",
+        "start": "ng serve $npm_package_config_project --poll 2000 --progress --watch --port 4200",
+        "build": "ng build $npm_package_config_project",
+        "build:serve": "cd dist/$npm_package_config_project && lite-server",
+        "dev": "run-s build setup:inotify build:serve",
+        "clean": "rimraf dist",
+        "setup:inotify": "sh ./scripts/increase-inotify-limit.sh",
         "test": "ng test",
         "lint": "ng lint",
         "e2e": "ng e2e"
