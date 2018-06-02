@@ -1,24 +1,24 @@
 <mz-navbar>
-   <a routerLink="/" class="brand-logo center">#VBS2018</a>
+   <a [routerLink]="['']" class="brand-logo center">#VBS2018</a>
    <mz-navbar-item-container [align]="'right'">
-      <mz-navbar-item><a class="waves-effect" routerLink="/faq">FAQ</a></mz-navbar-item>
-      <mz-navbar-item><a class="waves-effect" routerLink="/register">Register</a></mz-navbar-item>
-      <mz-navbar-item><a class="waves-effect" routerLink="/volunteer">Volunteer</a></mz-navbar-item>
+      <mz-navbar-item><a class="waves-effect" [routerLink]="['faq']">FAQ</a></mz-navbar-item>
+      <mz-navbar-item><a class="waves-effect" [routerLink]="['register']">Register</a></mz-navbar-item>
+      <mz-navbar-item><a class="waves-effect" [routerLink]="['volunteer']">Volunteer</a></mz-navbar-item>
    </mz-navbar-item-container>
 
    <!-- Duplication here is ugly but whatever, roll with it for now -->
    <mz-sidenav [id]="'sidenav-demo'" [backgroundClass]="'grey darken-4'" [collapseButtonId]="'btn-sidenav-demo'">
       <mz-sidenav-link>
-         <a href="/" class="btn pink mcbc white-text"><i class="material-icons white-text">home</i></a>
+         <a [routerLink]="['']" class="btn pink mcbc white-text"><i class="material-icons white-text">home</i></a>
       </mz-sidenav-link>
       <mz-sidenav-link>
-         <a class="btn waves-effect waves-light green mcbc white-text" routerLink="/faq">FAQ</a>
+         <a class="btn waves-effect waves-light green mcbc white-text" [routerLink]="['faq']">FAQ</a>
       </mz-sidenav-link>
       <mz-sidenav-link>
-         <a class="btn waves-effect waves-light green mcbc white-text" routerLink="/register">Register</a>
+         <a class="btn waves-effect waves-light green mcbc white-text" [routerLink]="['register']">Register</a>
       </mz-sidenav-link>
       <mz-sidenav-link>
-         <a class="btn waves-effect waves-light green mcbc white-text" routerLink="/volunteer">Volunteer</a>
+         <a class="btn waves-effect waves-light green mcbc white-text" [routerLink]="['volunteer']">Volunteer</a>
       </mz-sidenav-link>
    </mz-sidenav>
    <a href="#" class="button-collapse" [id]="'btn-sidenav-demo'"><i class="material-icons">menu</i></a>
