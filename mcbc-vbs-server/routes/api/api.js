@@ -2,29 +2,38 @@ const express = require('express');
 const router = express.Router();
 const path = require('path');
 
+const cors = require('cors');
+const corsOptions = {
+    origin: 'http://localhost:4200',
+    optionsSuccessStatus: 200
+};
+
 const ApiHelper = require('./helper');
 const Status = ApiHelper.helper.Status;
 const respond = ApiHelper.helper.respond;
 
-// We must always be logged in prior to having access to read APIs
-router.get('*', function(req, res, next) {
-   if (req.isAuthenticated()) {
-      [req, res] = ApiHelper.inject(req, res);
-      return next();
-   }
+// Cross-Origin Request Sharing (used only during development)
+router.options('*', cors(corsOptions));
 
-   respond.call(res, Status.unauthorized);
+// We must always be logged in prior to having access to read APIs
+router.get('*', function (req, res, next) {
+    if (req.isAuthenticated()) {
+        [req, res] = ApiHelper.inject(req, res);
+        return next();
+    }
+
+    respond.call(res, Status.unauthorized);
 });
 
 // Update methods don't need username/password authentication but must still only
 // come from a valid source using a valid API token
 router.put('*', function (req, res, next) {
-   if (true) { // CANIMPROVE: authenticate against API token
-      [req, res] = ApiHelper.inject(req, res);
-      return next();
-   }
+    if (true) { // CANIMPROVE: authenticate against API token
+        [req, res] = ApiHelper.inject(req, res);
+        return next();
+    }
 
-   respond.call(res, Status.unauthorized);
+    respond.call(res, Status.unauthorized);
 });
 
 // Resources
@@ -36,13 +45,13 @@ router.use('/volunteer', volunteer);
 
 // 404 catch-all
 router.all('*', function (req, res) {
-   res.respond(Status.missing);
+    res.respond(Status.missing);
 });
 
 // Basic error handler
-router.use(function(err, req, res, next) {
-   console.error(err.message, err.stack);
-   respond.call(res, ApiHelper.helper.Status.error, err);
+router.use(function (err, req, res, next) {
+    console.error(err.message, err.stack);
+    respond.call(res, ApiHelper.helper.Status.error, err);
 });
 
 module.exports = router;

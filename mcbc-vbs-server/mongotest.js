@@ -15,7 +15,7 @@ Array.prototype.repeat = function (n) {
 
 //////////////////////
 
-const DBConfig = require(process.env.VBS2017_DBCFG || "./db.config.dev");
+const DBConfig = require(process.env.VBS_DBCFG || "./db.config.dev");
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise; // Mongoose comes with mpromises by default, but we want to use ES6 native promises
 mongoose.connect(`mongodb://${DBConfig.host}:${DBConfig.port}/${DBConfig.db}`);
@@ -26,7 +26,7 @@ db.once('open', function () {
 
    // Create the admin user
    const User = require('./models/user').model;
-   const security = require(process.env.VBS2017_SECURITYCFG || "./security.config.dev");
+   const security = require(process.env.VBS_SECURITYCFG || "./security.config.dev");
    const admin = new User({
       username: 'admin',
       password: security.hashPassword('password')
