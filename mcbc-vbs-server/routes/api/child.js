@@ -1,10 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const path = require('path');
 
-const ApiHelper = require('./helper');
-const Status = ApiHelper.helper.Status;
-const respond = ApiHelper.helper.respond;
+const Status = require('./helper').helper.Status;
 
 const ChildModel = require('../../models/child');
 const Child = ChildModel.model;

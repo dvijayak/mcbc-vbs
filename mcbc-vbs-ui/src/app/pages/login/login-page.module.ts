@@ -5,6 +5,7 @@ import { ImportMaterializeModule } from '../../import-materialize.module';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { ServerAuthService } from '../admin/auth/server-auth.service';
 
 @NgModule({
     declarations: [
@@ -18,8 +19,8 @@ import { RouterModule } from '@angular/router';
         RouterModule,
         ImportMaterializeModule
     ],
-    entryComponents: [
-        LoginPageComponent
+    providers: [
+        ServerAuthService
     ],
     exports: [
         LoginPageComponent

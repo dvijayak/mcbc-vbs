@@ -1,19 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const path = require('path');
 
-const ApiHelper = require('./helper');
-const Status = ApiHelper.helper.Status;
-const respond = ApiHelper.helper.respond;
+const Status = require('./helper').helper.Status;
 
 // We must always be logged in prior to having access to read APIs
 router.get('*', function (req, res, next) {
     if (req.isAuthenticated()) {
-        [req, res] = ApiHelper.inject(req, res);
         return next();
     }
 
-    respond.call(res, Status.unauthorized);
+    res.respond(Status.unauthorized);
 });
 
 // Resources
@@ -31,7 +27,7 @@ router.all('*', function (req, res) {
 // Basic error handler
 router.use(function (err, req, res, next) {
     console.error(err.message, err.stack);
-    respond.call(res, ApiHelper.helper.Status.error, err);
+    res.respond(Status.error, err);
 });
 
 module.exports = router;

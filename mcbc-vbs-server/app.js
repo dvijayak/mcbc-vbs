@@ -16,12 +16,12 @@ app.set('view engine', 'pug');
 
 var favicon = require('serve-favicons');
 app.use(favicon({
-  '/favicon.ico': path.join(__dirname, 'favicon', 'favicon.ico'),
-  '/apple-touch-icon.png': path.join(__dirname, 'favicon', 'apple-touch-icon.png'),
-  '/favicon-32x32.png': path.join(__dirname, 'favicon', 'favicon-32x32.png'),
-  '/favicon-16x16.png': path.join(__dirname, 'favicon', 'favicon-16x16.png'),
-  '/manifest.json': path.join(__dirname, 'favicon', 'manifest.json'),
-  '/safari-pinned-tab.svg': path.join(__dirname, 'favicon', 'safari-pinned-tab.svg'),
+    '/favicon.ico': path.join(__dirname, 'favicon', 'favicon.ico'),
+    '/apple-touch-icon.png': path.join(__dirname, 'favicon', 'apple-touch-icon.png'),
+    '/favicon-32x32.png': path.join(__dirname, 'favicon', 'favicon-32x32.png'),
+    '/favicon-16x16.png': path.join(__dirname, 'favicon', 'favicon-16x16.png'),
+    '/manifest.json': path.join(__dirname, 'favicon', 'manifest.json'),
+    '/safari-pinned-tab.svg': path.join(__dirname, 'favicon', 'safari-pinned-tab.svg'),
 }));
 
 var logger = require('./logger');
@@ -29,7 +29,7 @@ app.use(logger);
 
 var bodyParser = require('body-parser');
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({extended: false}));
 
 /// Cookies and Sessions
 
@@ -39,14 +39,14 @@ app.use(bodyParser.urlencoded({ extended: false }));
 var session = require('express-session');
 app.set('trust proxy', 1); // trust first proxy
 app.use(session({
-   secret: 'b0nf1y4h'
-   , resave: false
-   , saveUninitialized: false
-   , cookie: {
-      // secure is not working as planned...
-      //secure: app.get('env') === 'production',
-      maxAge: 1 * 60 * 60 * 1000
-   }
+    secret: 'b0nf1y4h'
+    , resave: false
+    , saveUninitialized: false
+    , cookie: {
+        // secure is not working as planned...
+        //secure: app.get('env') === 'production',
+        maxAge: 1 * 60 * 60 * 1000
+    }
 }));
 
 var passport = require('passport');
@@ -76,36 +76,48 @@ const db = require('./db'); // should never be require'd again!
 
 /// Routes
 
+// Setup helpful utilities
+const ApiHelper = require('./routes/api/helper');
+app.all('*', // for all possible routes and methods
+    cors(corsOptions), // support CORS: TODO: this should be just during development -- see how to configure this as such
+    function (req, res, next) {
+        [req, res] = ApiHelper.inject(req, res); // attach some helpers to the `req` and `res` objects, for use by downstream middleware
+        next();
+    });
+
 // Data analysis backend
 var login = require('./routes/login');
-app.use('/login', cors(corsOptions), login);
+app.use('/login', login);
 var logout = require('./routes/logout');
 app.use('/logout', logout);
 var api = require('./routes/api/api.js');
-app.use('/api', cors(corsOptions), api);
+app.use('/api', api);
 
+// Used by clients to check whether a user's session is valid or not
+const authenticate = require('./routes/authenticate');
+app.use('/authenticate', authenticate);
 
 /// Catch-alls
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  return next(err);
+app.use(function (req, res, next) {
+    var err = new Error('Not Found');
+    err.status = 404;
+    return next(err);
 });
 
 // error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+app.use(function (err, req, res, next) {
+    // set locals, only providing error in development
+    res.locals.message = err.message;
+    res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // log the error
-  console.error(`Error: message: ${err.message}\nstatus: ${err.status}\nstack: ${err.stack}`);
+    // log the error
+    console.error(`Error: message: ${err.message}\nstatus: ${err.status}\nstack: ${err.stack}`);
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+    // render the error page
+    res.status(err.status || 500);
+    res.render('error');
 });
 
 module.exports = app;

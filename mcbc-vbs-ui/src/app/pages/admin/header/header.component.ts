@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 
+import { ReplaySubject } from 'rxjs';
+
 import { IntercomService } from '../body/admin/intercom.service';
 import { AppConfigService } from '../../../config/app-config.service';
-import { BehaviorSubject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 
@@ -15,7 +16,7 @@ import 'rxjs/add/operator/finally'; // for some reason, TSC is complaining unles
 })
 export class HeaderComponent {
 
-    private _serverUrl$ = new BehaviorSubject<string>('');
+    private _serverUrl$ = new ReplaySubject<string>(1);
 
     constructor(private intercom: IntercomService,
                 private _http: HttpClient,

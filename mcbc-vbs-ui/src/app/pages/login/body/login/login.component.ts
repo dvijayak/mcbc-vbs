@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AppConfigService } from '../../../../config/app-config.service';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
 
 class User {
@@ -40,21 +40,24 @@ export class LoginComponent {
     }
 
     onSubmit(): void {
-        const headers = new HttpHeaders({
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
+        this._ready$.subscribe(isReady => {
+            if (isReady) {
+                const headers = new HttpHeaders({
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                });
+                const errHandler = (err) => {
+                    this.loginError = true;
+                    console.error(`${err}`);
+                };
+                this._http.post(`${this._serverUrl}${this._targetUrl}`, JSON.stringify(this.model), {
+                    headers: headers,
+                    withCredentials: true // needed for CORS request cookies to work
+                }).subscribe(res => {
+                    this.loginError = false;
+                    this._router.navigateByUrl(this._successUrl);
+                }, err => errHandler(err));
+            }
         });
-        const errHandler = (err) => {
-            this.loginError = true;
-            console.error(err);
-        }
-        this._http.post(`${this._serverUrl}${this._targetUrl}`, JSON.stringify(this.model), {
-            headers: headers,
-            withCredentials: true // needed for CORS request cookies to work
-        }).subscribe(res => {
-                console.log(res);
-                this.loginError = false;
-                this._router.navigateByUrl(this._successUrl);
-            }, err => errHandler(err));
     }
 }

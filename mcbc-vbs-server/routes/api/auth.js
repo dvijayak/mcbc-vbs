@@ -35,11 +35,8 @@ passport.deserializeUser(function(username, done) {
        .catch(err => done(err));
 });
 
-var ApiHelper = require('./helper');
-var Status = ApiHelper.helper.Status;
+const Status = require('./helper').helper.Status;
 module.exports = function (req, res, next) {
-   [req, res] = ApiHelper.inject(req, res);
-
    passport.authenticate('local', function (err, user, info) {
       if (err) { return next(err); }
 
