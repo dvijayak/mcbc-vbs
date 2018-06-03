@@ -3,7 +3,7 @@
       <h2 class="pink-text text-mcbc">Child Registration</h2>
    </div>
    <div class="center-align">
-      <p class="flow-text"><b>Registration closes on August 4th, 2017</b></p>
+      <p class="flow-text"><b>Registration closes on August 5th, 2018</b></p>
       <p class="flow-text"><i>Note: all fields in each section of this form are mandatory</i></p>
    </div>
    <form [formGroup]="childForm" novalidate>
@@ -15,7 +15,7 @@
             <!-- first name -->
             <mz-input-container class="col s12 m6">
                <input #parent_first_name mz-input
-                  type="text" 
+                  type="text"
                   [label]="'First Name'"
                   [placeholder]="' '"
                   formControlName="first_name"
@@ -25,7 +25,7 @@
             <!-- last name -->
             <mz-input-container class="col s12 m6">
                <input mz-input
-                  type="text" 
+                  type="text"
                   [label]="'Last Name'"
                   [placeholder]="' '"
                   formControlName="last_name"
@@ -146,7 +146,7 @@
       <!-- == Emergency Contact == -->
       <div formGroupName="emergency" class="card-panel">
          <h4 class="center-align">Emergency Contact</h4>
-         
+
          <div class="row">
             <!-- first name -->
             <mz-input-container class="col s12 m6">
@@ -167,7 +167,7 @@
                   formControlName="last_name"
                   />
                <span class="error red-text" *ngIf="childForm.get('emergency').get('last_name').hasError">{{childForm.get('emergency').get('last_name').errorMessage}}</span>
-            </mz-input-container>         
+            </mz-input-container>
          </div>
 
          <div class="row">
