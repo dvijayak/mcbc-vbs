@@ -37,9 +37,9 @@ export class HeaderComponent {
     public onClickLogout(): void {
         this._serverUrl$.subscribe(url => {
             if (url) {
-                this._http.post(`${url}/logout`, null)
-                    .finally(() => this._router.navigateByUrl('/'))
-                    .subscribe();
+                this._http.post(`${url}/logout`, null, {
+                    withCredentials: true // needed for CORS request cookies to work
+                }).finally(() => this._router.navigateByUrl('/')).subscribe();
             }
         });
     }
