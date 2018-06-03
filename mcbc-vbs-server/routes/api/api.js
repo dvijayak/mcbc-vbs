@@ -2,34 +2,13 @@ const express = require('express');
 const router = express.Router();
 const path = require('path');
 
-const cors = require('cors');
-const corsOptions = {
-    origin: 'http://localhost:4200', // Angular app's default port
-    optionsSuccessStatus: 200
-};
-
 const ApiHelper = require('./helper');
 const Status = ApiHelper.helper.Status;
 const respond = ApiHelper.helper.respond;
 
-// Cross-Origin Request Sharing (used only during development)
-router.options('*', cors(corsOptions));
-
 // We must always be logged in prior to having access to read APIs
-router.get('*', cors(corsOptions), function (req, res, next) {
-    // TODO: DISABLED TEMP ONLY
-    if (true || req.isAuthenticated()) {
-        [req, res] = ApiHelper.inject(req, res);
-        return next();
-    }
-
-    respond.call(res, Status.unauthorized);
-});
-
-// Update methods don't need username/password authentication but must still only
-// come from a valid source using a valid API token
-router.put('*', function (req, res, next) {
-    if (true) { // TODO: authenticate against API token
+router.get('*', function (req, res, next) {
+    if (req.isAuthenticated()) {
         [req, res] = ApiHelper.inject(req, res);
         return next();
     }

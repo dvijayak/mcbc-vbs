@@ -45,7 +45,10 @@ export class SubmissionService {
         headers.append('Content-Type', 'application/json');
         headers.append('Accept', 'application/json');
 
-        return this.http.get(url, { headers: headers })
+        return this.http.get(url, {
+            headers: headers,
+            withCredentials: true // needed for CORS request cookies to work
+        })
             .map((res: Response) => res.json().data || {})
             .toPromise()
             .then(this.processData)

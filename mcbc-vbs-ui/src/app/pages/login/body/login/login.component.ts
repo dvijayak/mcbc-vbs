@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
-import { Headers, Http, Response } from '@angular/http';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { AppConfigService } from '../../../../config/app-config.service';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { Router } from '@angular/router';
 
 class User {
     username: string;
@@ -16,28 +18,43 @@ export class LoginComponent {
 
     public model = new User();
 
-    private readonly targetUrl = '/login';
-    private readonly successUrl = '/admin';
+    private readonly _targetUrl = '/login';
+    private readonly _successUrl = '/admin';
 
     public loginError = false;
 
+    private _ready$ = new BehaviorSubject<boolean>(false);
+    private _serverUrl = '';
 
-    constructor(private _http: HttpClient) {
+    constructor(private _http: HttpClient,
+                private _router: Router,
+                private _appConfigService: AppConfigService) {
+        this._appConfigService.appConfig$.subscribe(config => {
+            if (config.serverUrl) {
+                this._serverUrl = config.serverUrl;
+                this._ready$.next(true); // notify
+            } else {
+                console.error('No `serverUrl` was configured. Cannot access data from server.');
+            }
+        });
     }
 
     onSubmit(): void {
-        // let headers = new Headers();
-        // headers.append('Content-Type', 'application/json');
-        // headers.append('Accept', 'application/json');
-        // this._http.post(this.targetUrl, JSON.stringify(this.model), { headers: headers })
-        //     .map((res: Response) => res.json())
-        //     .subscribe(res => {
-        //         this.loginError = false;
-        //         window.location.href = res.data.redirectUrl;
-        //     }, err => {
-        //         this.loginError = true;
-        //         console.error(err);
-        //         window.location.href = err.data.redirectUrl;
-        //     });
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        });
+        const errHandler = (err) => {
+            this.loginError = true;
+            console.error(err);
+        }
+        this._http.post(`${this._serverUrl}${this._targetUrl}`, JSON.stringify(this.model), {
+            headers: headers,
+            withCredentials: true // needed for CORS request cookies to work
+        }).subscribe(res => {
+                console.log(res);
+                this.loginError = false;
+                this._router.navigateByUrl(this._successUrl);
+            }, err => errHandler(err));
     }
 }

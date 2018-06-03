@@ -45,18 +45,14 @@ module.exports = function (req, res, next) {
 
       // Authentication failed if user was not set
       if (!user) {
-         return res.respond(Status.unauthorized, {
-            redirectUrl: "/login"
-         })
+         return res.respond(Status.unauthorized)
       }
 
       // Otherwise, authentication succeeded...
       req.logIn(user, function (err) {
          if (err) { return next(err); }
 
-         return res.respond(Status.ok, {
-            redirectUrl: "/admin"
-         });
+         return res.respond(Status.ok);
       });
    })(req, res, next);
 };

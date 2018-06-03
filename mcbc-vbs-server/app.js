@@ -33,8 +33,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 /// Cookies and Sessions
 
-var cookieParser = require('cookie-parser');
-app.use(cookieParser());
+// var cookieParser = require('cookie-parser');
+// app.use(cookieParser());
 
 var session = require('express-session');
 app.set('trust proxy', 1); // trust first proxy
@@ -60,6 +60,14 @@ app.use(flash());
 var helmet = require('helmet');
 app.use(helmet());
 
+// Cross-Origin Request Sharing (used only during development)
+const cors = require('cors');
+const corsOptions = {
+    origin: 'http://localhost:4200', // Angular app's default url (note the port) during development
+    credentials: true, // this is needed to make cookies work
+    optionsSuccessStatus: 200
+};
+
 /// Env settings
 
 /// Database
@@ -70,20 +78,11 @@ const db = require('./db'); // should never be require'd again!
 
 // Data analysis backend
 var login = require('./routes/login');
-app.use('/login', login);
+app.use('/login', cors(corsOptions), login);
 var logout = require('./routes/logout');
 app.use('/logout', logout);
-var admin = require('./routes/admin');
-app.use('/admin', admin);
 var api = require('./routes/api/api.js');
-app.use('/api', api);
-
-// Serve the main angular frontend
-app.use(express.static(path.join(__dirname, './ui/dist')));
-// Catch all other routes and return the index file
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, './ui/dist/index.html'));
-});
+app.use('/api', cors(corsOptions), api);
 
 
 /// Catch-alls

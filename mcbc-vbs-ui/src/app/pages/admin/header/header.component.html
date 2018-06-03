@@ -6,7 +6,7 @@
       <mz-navbar-item><a class="btn waves-effect waves-light" (click)="onClickVolunteerDataSource()">Volunteers</a></mz-navbar-item>
    </mz-navbar-item-container>
    <mz-navbar-item-container [align]="'right'">
-      <mz-navbar-item><a class="waves-effect" href="/logout">Logout</a></mz-navbar-item>
+      <mz-navbar-item><a class="waves-effect" (click)="onClickLogout()">Logout</a></mz-navbar-item>
    </mz-navbar-item-container>
 
    <!-- Duplication here is ugly but whatever, roll with it for now -->
@@ -21,7 +21,7 @@
          <a class="btn waves-effect waves-light" (click)="onClickVolunteerDataSource()">Volunteers</a>
       </mz-sidenav-link>
       <mz-sidenav-link>
-         <a class="btn waves-effect waves-light green mcbc white-text" href="/logout">Logout</a>
+         <a class="btn waves-effect waves-light green mcbc white-text" (click)="onClickLogout()">Logout</a>
       </mz-sidenav-link>
    </mz-sidenav>
 </mz-navbar>
