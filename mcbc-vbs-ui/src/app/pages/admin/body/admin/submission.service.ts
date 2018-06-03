@@ -37,24 +37,6 @@ export class SubmissionService {
                 private _sanitizer: DomSanitizer) {
     }
 
-    // The result must be an array of submissions
-    getSubmissions(options: SubmissionOptions): Promise<any> {
-        const url = this._sanitizer.sanitize(SecurityContext.URL, options.createUrl());
-
-        const headers = new Headers();
-        headers.append('Content-Type', 'application/json');
-        headers.append('Accept', 'application/json');
-
-        return this.http.get(url, {
-            headers: headers,
-            withCredentials: true // needed for CORS request cookies to work
-        })
-            .map((res: Response) => res.json().data || {})
-            .toPromise()
-            .then(this.processData)
-            .catch(err => console.error(`Failed to retrieve submissions from server: ${err}`));
-    }
-
     private processData(data) {
         if (!data.submissions || !data.submissions.length) {
             return Promise.resolve();
@@ -74,5 +56,39 @@ export class SubmissionService {
 
         // We are good to go!
         return Promise.resolve(data);
+    }
+
+    // The result must be an array of submissions
+    public getSubmissions(options: SubmissionOptions): Promise<any> {
+        const url = this._sanitizer.sanitize(SecurityContext.URL, options.createUrl());
+
+        const headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        headers.append('Accept', 'application/json');
+
+        return this.http.get(url, {
+            headers: headers,
+            withCredentials: true // needed for CORS request cookies to work
+        })
+            .map((res: Response) => res.json().data || {})
+            .toPromise()
+            .then(this.processData)
+            .catch(err => console.error(`Failed to retrieve submissions from server: ${err}`));
+    }
+
+    public putSubmission (options: SubmissionOptions): Promise<any> {
+        const url = this._sanitizer.sanitize(SecurityContext.URL, options.createUrl());
+
+        const headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+
+        // CANIMPROVE: attach API token
+
+        return this.http.put(url, options.data, {
+            headers: headers,
+            withCredentials: true // needed for CORS request cookies to work
+        })
+            .map((res: Response) => res.json().data || {})
+            .toPromise();
     }
 }

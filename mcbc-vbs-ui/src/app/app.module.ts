@@ -5,7 +5,6 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { ReactiveFormsModule } from '@angular/forms';
 
 import { AppConfigService } from './config/app-config.service';
 import { HomePageModule } from './pages/home/home-page.module';
@@ -22,7 +21,6 @@ import { AppRoutingModule } from './app-routing.module';
         BrowserAnimationsModule,
         CommonModule,
         HttpClientModule,
-        ReactiveFormsModule,
         HomePageModule,
         LoginPageModule,
         AdminPageModule,
@@ -34,4 +32,5 @@ import { AppRoutingModule } from './app-routing.module';
     ],
     bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}

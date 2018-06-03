@@ -1,0 +1,337 @@
+<div id="form-container">
+   <div class="center-align">
+      <h2 class="pink-text text-mcbc">Child Registration</h2>
+   </div>
+   <div class="center-align">
+      <p class="flow-text"><b>Registration closes on August 4th, 2017</b></p>
+      <p class="flow-text"><i>Note: all fields in each section of this form are mandatory</i></p>
+   </div>
+   <form [formGroup]="childForm" novalidate>
+      <!-- == Parent/Guardian == -->
+      <div formGroupName="parent" class="card-panel">
+         <h4 class="center-align">Parent/Guardian</h4>
+
+         <div class="row">
+            <!-- first name -->
+            <mz-input-container class="col s12 m6">
+               <input #parent_first_name mz-input
+                  type="text" 
+                  [label]="'First Name'"
+                  [placeholder]="' '"
+                  formControlName="first_name"
+                  />
+               <span class="error red-text" *ngIf="childForm.get('parent').get('first_name').hasError">{{childForm.get('parent').get('first_name').errorMessage}}</span>
+            </mz-input-container>
+            <!-- last name -->
+            <mz-input-container class="col s12 m6">
+               <input mz-input
+                  type="text" 
+                  [label]="'Last Name'"
+                  [placeholder]="' '"
+                  formControlName="last_name"
+                  />
+               <span class="error red-text" *ngIf="childForm.get('parent').get('last_name').hasError">{{childForm.get('parent').get('last_name').errorMessage}}</span>
+            </mz-input-container>
+         </div>
+
+         <div formGroupName="address">
+            <div class="row">
+               <!-- street -->
+               <mz-input-container class="col s12">
+                  <input mz-input
+                     type="text"
+                     [label]="'Address'"
+                     [placeholder]="' '"
+                     formControlName="street"
+                     />
+                  <span class="error red-text" *ngIf="childForm.get('parent').get('address').get('street').hasError">{{childForm.get('parent').get('address').get('street').errorMessage}}</span>
+               </mz-input-container>
+            </div>
+            <div class="row">
+               <!-- city -->
+               <mz-input-container class="col s12 m4">
+                  <input mz-input
+                     type="text"
+                     [label]="'City'"
+                     [placeholder]="' '"
+                     formControlName="city"
+                     />
+                  <span class="error red-text" *ngIf="childForm.get('parent').get('address').get('city').hasError">{{childForm.get('parent').get('address').get('city').errorMessage}}</span>
+               </mz-input-container>
+
+               <!-- province -->
+               <div class="col s12 m4"> <!-- this outer div is needed for select element labels to work well with the error message space span element -->
+                  <mz-select-container>
+                     <select mz-select
+                        [label]="'Select your Province'"
+                        [placeholder]="' '"
+                        formControlName="province"
+                        >
+                        <option *ngFor="let province of provinces" [value]="province.name">{{province.name}}</option>
+                     </select>
+                  </mz-select-container>
+                  <span class="error red-text" *ngIf="childForm.get('parent').get('address').get('province').hasError">{{childForm.get('parent').get('address').get('province').errorMessage}}</span>
+               </div>
+
+               <!-- postal code -->
+               <mz-input-container class="col s12 m4">
+                  <input mz-input
+                     type="text"
+                     [label]="'Postal Code'"
+                     [placeholder]="' '"
+                     formControlName="postal_code"
+                     />
+                  <span class="error red-text" *ngIf="childForm.get('parent').get('address').get('postal_code').hasError">{{childForm.get('parent').get('address').get('postal_code').errorMessage}}</span>
+               </mz-input-container>
+            </div>
+         </div>
+
+         <div class="row">
+            <!-- email -->
+            <mz-input-container class="col s12 m6">
+               <i mz-icon mz-input-prefix
+                  [icon]="'email'">
+               </i>
+               <input mz-input
+                  type="email"
+                  [label]="'Email'"
+                  [placeholder]="' '"
+                  formControlName="email"
+                  />
+               <span class="error red-text" *ngIf="childForm.get('parent').get('email').hasError">{{childForm.get('parent').get('email').errorMessage}}</span>
+            </mz-input-container>
+
+            <!-- phone -->
+            <mz-input-container class="col s12 m6">
+               <i mz-icon mz-input-prefix
+                  [icon]="'phone'">
+               </i>
+               <input mz-input
+                  type="tel"
+                  [label]="'Phone Number'"
+                  [placeholder]="' '"
+                  formControlName="phone"
+                  />
+               <span class="error red-text" *ngIf="childForm.get('parent').get('phone').hasError">{{childForm.get('parent').get('phone').errorMessage}}</span>
+            </mz-input-container>
+         </div>
+
+         <div class="row">
+            <!-- may we photo? -->
+            <mz-checkbox-container class="col s12">
+               <!-- Materialize requires `id` to be specified for checkboxes to work -->
+               <input mz-checkbox
+                  type="checkbox"
+                  id="is_photo_allowed"
+                  [label]="'May we include your children in our photography/videography? (uncheck to opt-out)'"
+                  filledIn="true"
+                  formControlName="is_photo_allowed"
+                  />
+            </mz-checkbox-container>
+
+            <!-- may we use photo in publications? (hide when above is false) -->
+            <mz-checkbox-container class="col s12">
+               <!-- Materialize requires `id` to be specified for checkboxes to work -->
+               <input mz-checkbox
+                  type="checkbox"
+                  id="is_photo_public_use_allowed"
+                  [label]="'May we use this content in our media publications solely for the purpose of promotion? (uncheck to opt-out)'"
+                  filledIn="true"
+                  formControlName="is_photo_public_use_allowed"
+                  />
+            </mz-checkbox-container>
+         </div>
+      </div>
+
+      <!-- == Emergency Contact == -->
+      <div formGroupName="emergency" class="card-panel">
+         <h4 class="center-align">Emergency Contact</h4>
+         
+         <div class="row">
+            <!-- first name -->
+            <mz-input-container class="col s12 m6">
+               <input mz-input
+                  type="text"
+                  [label]="'First Name'"
+                  [placeholder]="' '"
+                  formControlName="first_name"
+                  />
+               <span class="error red-text" *ngIf="childForm.get('emergency').get('first_name').hasError">{{childForm.get('emergency').get('first_name').errorMessage}}</span>
+            </mz-input-container>
+            <!-- last name -->
+            <mz-input-container class="col s12 m6">
+               <input mz-input
+                  type="text"
+                  [label]="'Last Name'"
+                  [placeholder]="' '"
+                  formControlName="last_name"
+                  />
+               <span class="error red-text" *ngIf="childForm.get('emergency').get('last_name').hasError">{{childForm.get('emergency').get('last_name').errorMessage}}</span>
+            </mz-input-container>         
+         </div>
+
+         <div class="row">
+            <!-- relationship to child -->
+            <mz-input-container class="col s12 m6">
+               <input mz-input
+                  type="text"
+                  [label]="'Relationship to child'"
+                  [placeholder]="' '"
+                  formControlName="relationship"
+                  />
+               <span class="error red-text" *ngIf="childForm.get('emergency').get('relationship').hasError">{{childForm.get('emergency').get('relationship').errorMessage}}</span>
+            </mz-input-container>
+            <!-- phone -->
+            <mz-input-container class="col s12 m6">
+               <i mz-icon mz-input-prefix
+                  [icon]="'phone'">
+               </i>
+               <input mz-input
+                  type="tel"
+                  [label]="'Phone Number'"
+                  [placeholder]="' '"
+                  formControlName="phone"
+                  />
+               <span class="error red-text" *ngIf="childForm.get('emergency').get('phone').hasError">{{childForm.get('emergency').get('phone').errorMessage}}</span>
+            </mz-input-container>
+         </div>
+      </div>
+
+      <!-- == Child == -->
+      <div formArrayName="children">
+         <div class="card-panel"
+            *ngFor="let child of childrenArray.controls; let i=index" [formGroupName]="i"
+            >
+            <h4 class="center-align">Child {{i+1}}</h4>
+
+            <div class="row">
+               <!-- first name -->
+               <mz-input-container class="col s12 m6">
+                  <input mz-input
+                     type="text"
+                     [label]="'First Name'"
+                     [placeholder]="' '"
+                     formControlName="first_name"
+                     />
+                  <span class="error red-text" *ngIf="child.get('first_name').hasError">{{child.get('first_name').errorMessage}}</span>
+               </mz-input-container>
+               <!-- last name -->
+               <mz-input-container class="col s12 m6">
+                  <input mz-input
+                     type="text"
+                     [label]="'Last Name'"
+                     [placeholder]="' '"
+                     formControlName="last_name"
+                     />
+                  <span class="error red-text" *ngIf="child.get('last_name').hasError">{{child.get('last_name').errorMessage}}</span>
+               </mz-input-container>
+            </div>
+
+            <div class="row">
+               <!-- date of birth -->
+               <mz-input-container class="col s12 m4">
+                  <input mz-input class="datepicker"
+                     type="date"
+                     [label]="'Date of Birth'"
+                     [placeholder]="' '"
+                     formControlName="dob"
+                     />
+                  <span class="error red-text" *ngIf="child.get('dob').hasError">{{child.get('dob').errorMessage}}</span>
+               </mz-input-container>
+
+               <!-- grade -->
+               <div class="col s12 m4"> <!-- this outer div is needed for select element labels to work well with the error message space span element -->
+                  <mz-select-container>
+                     <select mz-select
+                        type="text"
+                        [label]="'Grade (entering in September)'"
+                        [placeholder]="' '"
+                        formControlName="grade"
+                        >
+                        <option value="JK">JK</option>
+                        <option value="SK">SK</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                     </select>
+                  </mz-select-container>
+                  <span class="error red-text" *ngIf="child.get('grade').hasError">{{child.get('grade').errorMessage}}</span>
+               </div>
+
+               <!-- shirt size -->
+               <div class="col s12 m4"> <!-- this outer div is needed for select element labels to work well with the error message space span element -->
+                  <mz-select-container>
+                     <select mz-select
+                        id="shirtsize"
+                        formControlName="shirt_size"
+                        [label]="'Select your Shirt Size'"
+                        [placeholder]="' '"
+                        >
+                        <option value="XS">XS</option>
+                        <option value="S">S</option>
+                        <option value="M">M</option>
+                        <option value="L">L</option>
+                        <option value="XL">XL</option>
+                     </select>
+                  </mz-select-container>
+                  <span class="error red-text" *ngIf="child.get('shirt_size').hasError">{{child.get('shirt_size').errorMessage}}</span>
+               </div>
+            </div>
+
+            <!-- medical info -->
+            <div class="row">
+               <mz-textarea-container class="col s12">
+                  <textarea mz-textarea
+                     [label]="'Medical, special needs, allergies, and other information we need to know'"
+                     [placeholder]="' '"
+                     formControlName="medical_info"
+                     length="900"
+                     ></textarea>
+               </mz-textarea-container>
+            </div>
+
+            <!-- remove child -->
+            <div class="row">
+               <div class="col s12">
+                  <button class="btn red waves-effect waves-light right"
+                     (click)="deleteChild(i)"
+                     [disabled]="childrenArray.controls.length <= 1"
+                     >
+                     <i mz-icon [align]="'right'" [icon]="'delete'"></i>
+                     Remove Child
+                  </button>
+               </div>
+            </div>
+         </div>
+      </div>
+      <span>
+         <button class="btn green waves-effect waves-light"
+            (click)="addChild()"
+            [disabled]="childrenArray.controls.length >= maxChildren"
+            >
+            <i mz-icon [align]="'right'" [icon]="'person_add'"></i>
+            Add Child
+         </button>
+         <h6>Max: {{maxChildren}}</h6>
+      </span>
+   </form>
+</div>
+<div id="submit-container" class="center-align">
+   <p class="red-text" *ngIf="childForm.invalid">Please fill in all required fields correctly</p>
+   <p class="green-text" *ngIf="!childForm.invalid && !submissionInProgress">Looks good!</p>
+   <p *ngIf="submissionInProgress">
+      <mz-spinner
+         [color]="'blue'"
+         [size]="'small'"
+         >
+      </mz-spinner>
+   </p>
+   <button mz-button
+      type="submit"
+      (click)="onSubmit()"
+      [disabled]="childForm.invalid"
+      >Submit <i class="material-icons right">send</i></button>
+</div>

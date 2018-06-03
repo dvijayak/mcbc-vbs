@@ -1,5 +1,13 @@
 import { NgModule } from '@angular/core';
-import { MzButtonModule, MzCollapsibleModule, MzInputModule, MzNavbarModule, MzSidenavModule } from 'ng2-materialize';
+import {
+    MzButtonModule, MzCheckboxModule,
+    MzCollapsibleModule, MzDatepickerModule,
+    MzIconMdiModule,
+    MzIconModule,
+    MzInputModule,
+    MzNavbarModule, MzSelectModule,
+    MzSidenavModule, MzSpinnerModule, MzTextareaModule
+} from 'ng2-materialize';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 /**
@@ -13,7 +21,14 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
         MzCollapsibleModule,
         MzNavbarModule,
         MzSidenavModule,
-        MzInputModule
+        MzInputModule,
+        MzIconModule,
+        MzIconMdiModule,
+        MzDatepickerModule,
+        MzSelectModule,
+        MzCheckboxModule,
+        MzTextareaModule,
+        MzSpinnerModule
     ],
     exports: [
         BrowserAnimationsModule,
@@ -21,7 +36,14 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
         MzCollapsibleModule,
         MzNavbarModule,
         MzSidenavModule,
-        MzInputModule
+        MzInputModule,
+        MzIconModule,
+        MzIconMdiModule,
+        MzDatepickerModule,
+        MzSelectModule,
+        MzCheckboxModule,
+        MzTextareaModule,
+        MzSpinnerModule
     ]
 })
 export class ImportMaterializeModule {

@@ -7,6 +7,10 @@ import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { HomeComponent } from './body/home/home.component';
 import { FaqComponent } from './body/faq/faq.component';
+import { RegisterComponent } from './body/register/register.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SubmissionService } from '../admin/body/admin/submission.service';
+import { MzToastService } from 'ng2-materialize';
 
 @NgModule({
     declarations: [
@@ -14,15 +18,19 @@ import { FaqComponent } from './body/faq/faq.component';
         HeaderComponent,
         FooterComponent,
         HomeComponent,
-        FaqComponent
+        FaqComponent,
+        RegisterComponent
     ],
     imports: [
         CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
         HomePageRoutingModule,
         ImportMaterializeModule
     ],
-    entryComponents: [
-        HomePageComponent
+    providers: [
+        SubmissionService,
+        MzToastService
     ],
     exports: [
         HomePageComponent

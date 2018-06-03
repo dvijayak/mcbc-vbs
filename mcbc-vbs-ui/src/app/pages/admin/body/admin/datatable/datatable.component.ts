@@ -84,7 +84,6 @@ export class DatatableComponent implements OnInit, OnChanges {
                     .then(fetch => {
                         if (fetch) {
                             return this.submissionService.getSubmissions(new SubmissionOptions(this._serverUrl, this.query, {
-                                serverUrl: this._serverUrl,
                                 pretty: true
                             })).then(this.updateDataModel.bind(this));
                         } else {
