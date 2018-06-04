@@ -1,0 +1,206 @@
+#!/usr/bin/env bash
+export DEBIAN_FRONTEND=noninteractive
+
+user=mcbc
+home=/home/$user
+home_html=$home/public_html
+dbname=vbs2018
+
+### Begin root user configs
+
+# Setup swap file
+fallocate -l 1G /swapfile # Change 1G to whatever is appropriate for your server (remember: 2 times RAM)
+chmod 600 /swapfile # Restrict access
+mkswap /swapfile # Format and use the swap file
+swapon /swapfile
+sh -c 'echo "/swapfile none swap sw 0 0" >> /etc/fstab' # Configure system to use the swap file automatically on startup/login
+
+# Set up the firewall
+ufw allow http
+ufw allow https
+ufw allow ssh
+ufw logging on # It is good to enable logging
+ufw show added # Review the rules you have created
+ufw enable # Once satisfied, turn on the firewall
+
+# Create the user
+echo " [droplet-init] Creating the non-root user $user"
+adduser $user
+echo "Don't forget to ssh in as root later and add a password for $user! Use this command once SSH'd: 'passwd mcbc'"
+gpasswd -a $user sudo
+mkdir -p $home/.ssh # If it doesn't exist, create the user's .ssh directory
+cp -p /root/.ssh/authorized_keys $home/.ssh # Copy over all public keys
+chmod 600 $home/.ssh/authorized_keys       # Should be unnecessary, but just in case
+chmod 700 $home/.ssh
+chown -R $user $home/.ssh # Change ownership to $user
+chgrp -R $user $home/.ssh
+
+### We now proceed as the non-root user
+
+su - $user
+
+# Redirect stdout/stderr to a file
+exec &> $home/droplet-init_logfile.txt
+
+sudo apt-get update -q
+
+
+echo " [droplet-init] Installing useful auxiliary packages"
+# Install useful packages
+sudo apt-get install -q -y -f build-essential zip unzip git inotify-tools ntp curl
+
+echo " [droplet-init] Installing NGINX, MongoDB"
+# Install NGINX
+sudo apt-get install -q -y -f nginx
+
+# Install MongoDB
+# (Better to install from official MongoDB repo)
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv EA312927
+echo "deb http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.2.list
+sudo apt-get update -q
+sudo apt-get install -y mongodb-org
+
+echo " [droplet-init] Installing NodeJS"
+# Install NodeJS
+cd $home
+curl -sL https://deb.nodesource.com/setup_6.x -o nodesource_setup.sh
+sudo bash nodesource_setup.sh
+sudo apt-get install -q -y nodejs
+# Install PM2
+sudo npm install -g pm2
+
+echo " [droplet-init] Configuring Git"
+# Configure Git
+git config --global user.name $name
+
+echo " [droplet-init] Configuring NGINX"
+# Configure NGINX for NodeJS (TLS configuration must be done post-init)
+sudo rm /etc/nginx/sites-enabled/default
+sudo cat >> /etc/nginx/sites-available/vbs2018 <<'EOF'
+# Based on the official Joomla! configuration file (http://docs.joomla.org/Nginx)
+
+server {
+	listen 80;
+	server_name vbs.mcbc.org;
+	server_name_in_redirect off;
+
+	access_log /var/log/nginx/vbs.mcbc.org.access_log;
+	error_log /var/log/nginx/vbs.mcbc.org.error_log info;
+
+	root $home_html;
+
+	index index.html;
+
+	# NodeJS proxy
+	location / {
+		proxy_pass http://localhost:3000;
+		proxy_http_version 1.1;
+		proxy_set_header Upgrade $http_upgrade;
+		proxy_set_header Connection 'upgrade';
+		proxy_set_header Host $host;
+		proxy_cache_bypass $http_upgrade;
+	}
+
+	# caching of files
+	location ~* \.(ico|pdf|flv)\$ {
+		expires 1y;
+	}
+	location ~* \.(js|css|png|jpg|jpeg|gif|swf|xml|txt)\$ {
+		expires 14d;
+	}
+}
+EOF
+# Enable the vbs2018 configuration
+sudo ln -s /etc/nginx/sites-available/vbs2018 /etc/nginx/sites-enabled/vbs2018
+
+echo " [droplet-init] Configuring MongoDB"
+# Configure MongoDB to work with systemd
+sudo cat >> /etc/systemd/system/mongodb.service <<'EOF'
+[Unit]
+Description=High-performance, schema-free document-oriented database
+After=network.target
+
+[Service]
+User=mongodb
+ExecStart=/usr/bin/mongod --quiet --config /etc/mongod.conf
+
+[Install]
+WantedBy=multi-user.target
+EOF
+# Note: only the web server will need access to the local MongoDB instance, so we will not need to configure the firewall as it will be blocked by default for external access
+
+echo " [droplet-init] Preparing the home directory"
+# Prepare the home directory
+mkdir $home_html
+
+echo " [droplet-init] Creating test files in $home_html"
+cat >> $home_html/index.html <<'EOF'
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
+<style>
+	 body {
+		  width: 35em;
+		  margin: 0 auto;
+		  font-family: Tahoma, Verdana, Arial, sans-serif;
+	 }
+</style>
+</head>
+<body>
+<h1>Welcome to nginx!</h1>
+<p>If you see this page, the nginx web server is successfully installed and
+working. Further configuration is required.</p>
+
+<p>For online documentation and support please refer to
+<a href="http://nginx.org/">nginx.org</a>.<br/>
+Commercial support is available at
+<a href="http://nginx.com/">nginx.com</a>.</p>
+
+<p><em>Thank you for using nginx.</em></p>
+</body>
+</html>
+
+EOF
+cat >> $home_html/50x.html <<'EOF'
+<!DOCTYPE html>
+<html>
+<head>
+<title>Error</title>
+<style>
+	 body {
+		  width: 35em;
+		  margin: 0 auto;
+		  font-family: Tahoma, Verdana, Arial, sans-serif;
+	 }
+</style>
+</head>
+<body>
+<h1>An error occurred.</h1>
+<p>Sorry, the page you are looking for is currently unavailable.<br/>
+Please try again later.</p>
+<p>If you are the system administrator of this resource then you should check
+the <a href="http://nginx.org/r/error_log">error log</a> for details.</p>
+<p><em>Faithfully yours, nginx.</em></p>
+</body>
+</html>
+
+EOF
+
+echo " [droplet-init] Securing all file and folder access permissions in $home_html"
+# Secure all file and folder access permissions in the Web server document root.
+find $home_html -type d -exec chmod 755 {} \;
+find $home_html -type f -exec chmod 644 {} \;
+
+echo " [droplet-init] Setting correct ownership for $user user home directory"
+# Set correct ownership
+sudo chown -R $user $home
+sudo chgrp -R $user $home
+
+echo " [droplet-init] Restarting all services:"
+# Restart services
+sudo systemctl restart nginx
+sudo systemctl start mongodb
+
+#####################################################################################
+echo " [droplet-init] Congratulations! You have completed setting up the basic skeleton of your production environment."
