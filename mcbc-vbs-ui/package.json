@@ -31,7 +31,7 @@
         "@swimlane/ngx-datatable": "^13.0.1",
         "core-js": "^2.5.4",
         "mdi": "^2.2.43",
-        "ng2-materialize": "^1.8.1",
+        "ngx-materialize": "^6.0.0",
         "ngx-pipes": "^2.1.7",
         "rxjs": "^6.0.0",
         "rxjs-compat": "^6.2.0",

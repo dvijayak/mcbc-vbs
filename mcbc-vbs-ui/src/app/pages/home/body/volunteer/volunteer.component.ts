@@ -2,7 +2,7 @@ import { Component, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { SubmissionOptions, SubmissionService } from '../../../../submission/submission.service';
-import { MzToastService } from 'ng2-materialize';
+import { MzToastService } from 'ngx-materialize';
 
 import { AREASOFINTEREST, CanadianProvince, CANADIANPROVINCES, CustomValidators, FormInputPostProcessors, ToastOptions } from '../helper';
 import { Router } from '@angular/router';
