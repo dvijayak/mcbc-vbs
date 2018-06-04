@@ -61,11 +61,18 @@ sudo apt-get update -q
 sudo apt-get install -y mongodb-org
 
 echo " [droplet-init] Installing NodeJS"
-# Install NodeJS
+# Install NodeJS (via NVM)
 cd $home
-curl -sL https://deb.nodesource.com/setup_6.x -o nodesource_setup.sh
-sudo bash nodesource_setup.sh
-sudo apt-get install -q -y nodejs
+curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+nvm install node
+# Note: the following is instructions for installing Node v6.x.x. Seeing that we need v10+, they are outdated. 
+#       They are left here commented out for archival/reference purposes. Use the NVM approach above instead.
+# # curl -sL https://deb.nodesource.com/setup_6.x -o nodesource_setup.sh
+# # sudo bash nodesource_setup.sh
+# # sudo apt-get install -q -y nodejs
 # Install PM2
 sudo npm install -g pm2
 

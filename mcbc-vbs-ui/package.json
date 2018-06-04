@@ -30,7 +30,7 @@
         "@angular/router": "^6.0.3",
         "@swimlane/ngx-datatable": "^13.0.1",
         "core-js": "^2.5.4",
-        "mdi": "^2.2.43",
+        "@mdi/font": "^2.2.43",
         "ngx-materialize": "^6.0.0",
         "ngx-pipes": "^2.1.7",
         "rxjs": "^6.0.0",
