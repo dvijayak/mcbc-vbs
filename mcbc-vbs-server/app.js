@@ -99,6 +99,14 @@ app.use('/authenticate', authenticate);
 
 /// Catch-alls
 
+const uiDistRoot = '../mcbc-vbs-ui/dist/mcbc-vbs-ui'
+// Serve the angular UI
+app.use(express.static(path.join(__dirname, uiDistRoot)));
+// Catch all other routes and return the angular UI index file
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, `${uiDistRoot}/index.html`));
+});
+
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
     var err = new Error('Not Found');
