@@ -42,11 +42,7 @@ export class SubmissionService {
                 private _sanitizer: DomSanitizer,
                 private _appConfigService: AppConfigService) {
         this._appConfigService.appConfig$.subscribe(config => {
-            if (config.serverUrl) {
-                this._serverUrl$.next(config.serverUrl);
-            } else {
-                console.error('No `serverUrl` was configured. Cannot access data from server.');
-            }
+            this._serverUrl$.next(config.serverUrl);
         });
     }
 

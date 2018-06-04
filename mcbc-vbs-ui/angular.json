@@ -25,7 +25,7 @@
                         "styles": [
                             "src/styles.css",
                             "node_modules/materialize-css/dist/css/materialize.min.css",
-                            "node_modules/mdi/css/materialdesignicons.min.css",
+                            "node_modules/@mdi/font/css/materialdesignicons.min.css",
                             "node_modules/@swimlane/ngx-datatable/release/index.css",
                             "node_modules/@swimlane/ngx-datatable/release/themes/material.css",
                             "node_modules/@swimlane/ngx-datatable/release/assets/icons.css"

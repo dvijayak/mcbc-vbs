@@ -15,11 +15,7 @@ export class ServerAuthService {
     constructor(private _http: HttpClient,
                 private _appConfigService: AppConfigService) {
         this._appConfigService.appConfig$.subscribe(config => {
-            if (config && config.serverUrl) {
-                this._serverUrl$.next(config.serverUrl);
-            } else {
-                console.error('No `serverUrl` was configured. Cannot access data from server.');
-            }
+            this._serverUrl$.next(config.serverUrl);
         });
     }
 
