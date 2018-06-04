@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { FaqComponent } from './body/faq/faq.component';
 import { HomeComponent } from './body/home/home.component';
 import { RegisterComponent } from './body/register/register.component';
+import { VolunteerComponent } from './body/volunteer/volunteer.component';
 import { HomePageComponent } from './home-page.component';
 
 const routes: Routes = [
@@ -22,10 +23,10 @@ const routes: Routes = [
                 path: 'register',
                 component: RegisterComponent
             },
-            // {
-            //     path: 'volunteer',
-            //     component: VolunteerComponent
-            // },
+            {
+                path: 'volunteer',
+                component: VolunteerComponent
+            }
         ]
     }
 ];

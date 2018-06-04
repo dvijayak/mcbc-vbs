@@ -11,6 +11,7 @@ import { RegisterComponent } from './body/register/register.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SubmissionService } from '../admin/body/admin/submission.service';
 import { MzToastService } from 'ng2-materialize';
+import { VolunteerComponent } from './body/volunteer/volunteer.component';
 
 @NgModule({
     declarations: [
@@ -19,7 +20,8 @@ import { MzToastService } from 'ng2-materialize';
         FooterComponent,
         HomeComponent,
         FaqComponent,
-        RegisterComponent
+        RegisterComponent,
+        VolunteerComponent
     ],
     imports: [
         CommonModule,

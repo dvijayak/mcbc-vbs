@@ -1,0 +1,250 @@
+<div id="form-container">
+   <div class="center-align">
+      <h2 class="pink-text text-mcbc">Volunteer Registration</h2>
+   </div>
+   <div class="center-align">
+      <p class="flow-text"><i>Note: all fields in each section of this form are mandatory</i></p>
+   </div>
+   <form [formGroup]="volunteerForm" novalidate>
+      <!-- == Volunteer == -->
+      <div class="card-panel">
+         <h4 class="center-align">Volunteer</h4>
+
+         <div class="row">
+            <!-- first name -->
+            <mz-input-container class="col s12 m6">
+               <input mz-input
+                  type="text" 
+                  [label]="'First Name'"
+                  [placeholder]="' '"
+                  formControlName="first_name"
+                  />
+               <span class="error red-text" *ngIf="volunteerForm.get('first_name').hasError">{{volunteerForm.get('first_name').errorMessage}}</span>
+            </mz-input-container>
+            <!-- last name -->
+            <mz-input-container class="col s12 m6">
+               <input mz-input
+                  type="text" 
+                  [label]="'Last Name'"
+                  [placeholder]="' '"
+                  formControlName="last_name"
+                  />
+               <span class="error red-text" *ngIf="volunteerForm.get('last_name').hasError">{{volunteerForm.get('last_name').errorMessage}}</span>
+            </mz-input-container>
+         </div>
+
+         <div class="row">
+            <!-- shirt size -->
+            <div class="col s12 m4"> <!-- this outer div is needed for select element labels to work well with the error message space span element -->
+               <mz-select-container>
+                  <select mz-select
+                     formControlName="shirt_size"
+                     [label]="'Select your Shirt Size'"
+                     [placeholder]="' '"
+                     >
+                     <option value="XS">XS</option>
+                     <option value="S">S</option>
+                     <option value="M">M</option>
+                     <option value="L">L</option>
+                     <option value="XL">XL</option>
+                  </select>
+               </mz-select-container>
+               <span class="error red-text" *ngIf="volunteerForm.get('shirt_size').hasError">{{volunteerForm.get('shirt_size').errorMessage}}</span>
+            </div>
+
+            <!-- is 18 or over? -->
+            <mz-checkbox-container class="col s12 m4">
+               <!-- Materialize requires `id` to be specified for checkboxes to work -->
+               <input mz-checkbox
+                  type="checkbox"
+                  [label]="'Are you 18 or over?'"
+                  filledIn="true"
+                  formControlName="is_adult"
+                  id="is_adult"
+                  />
+            </mz-checkbox-container>
+
+            <!-- police check completed -->
+            <mz-checkbox-container class="col s12 m4">
+               <input mz-checkbox
+                  type="checkbox"
+                  [label]="'Completed Police Vulnerable Sector Check and submitted to MCBC?'"
+                  filledIn="true"
+                  formControlName="police_check_completed"
+                  id="police_check_completed"
+                  />
+            </mz-checkbox-container>
+         </div>
+
+         <div formGroupName="address">
+            <div class="row">
+               <!-- street -->
+               <mz-input-container class="col s12">
+                  <input mz-input
+                     type="text"
+                     [label]="'Address'"
+                     [placeholder]="' '"
+                     formControlName="street"
+                     />
+                  <span class="error red-text" *ngIf="volunteerForm.get('address').get('street').hasError">{{volunteerForm.get('address').get('street').errorMessage}}</span>
+               </mz-input-container>
+            </div>
+            <div class="row">
+               <!-- city -->
+               <mz-input-container class="col s12 m4">
+                  <input mz-input
+                     type="text"
+                     [label]="'City'"
+                     [placeholder]="' '"
+                     formControlName="city"
+                     />
+                  <span class="error red-text" *ngIf="volunteerForm.get('address').get('city').hasError">{{volunteerForm.get('address').get('city').errorMessage}}</span>
+               </mz-input-container>
+
+               <!-- province -->
+               <div class="col s12 m4"> <!-- this outer div is needed for select element labels to work well with the error message space span element -->
+                  <mz-select-container>
+                     <select mz-select
+                        [label]="'Select your Province'"
+                        [placeholder]="' '"
+                        formControlName="province"
+                        >
+                        <option *ngFor="let province of provinces" [value]="province.name">{{province.name}}</option>
+                     </select>
+                  </mz-select-container>
+                  <span class="error red-text" *ngIf="volunteerForm.get('address').get('province').hasError">{{volunteerForm.get('address').get('province').errorMessage}}</span>
+               </div>
+
+               <!-- postal code -->
+               <mz-input-container class="col s12 m4">
+                  <input mz-input
+                     type="text"
+                     [label]="'Postal Code'"
+                     [placeholder]="' '"
+                     formControlName="postal_code"
+                     />
+                  <span class="error red-text" *ngIf="volunteerForm.get('address').get('postal_code').hasError">{{volunteerForm.get('address').get('postal_code').errorMessage}}</span>
+               </mz-input-container>
+            </div>
+         </div>
+
+         <div class="row">
+            <!-- email -->
+            <mz-input-container class="col s12 m6">
+               <i mz-icon mz-input-prefix
+                  [icon]="'email'">
+               </i>
+               <input mz-input
+                  type="email"
+                  [label]="'Email'"
+                  [placeholder]="' '"
+                  [dataError]="'Invalid email'"
+                  formControlName="email"
+                  />
+               <span class="error red-text" *ngIf="volunteerForm.get('email').hasError">{{volunteerForm.get('email').errorMessage}}</span>
+            </mz-input-container>
+
+            <!-- phone -->
+            <mz-input-container class="col s12 m6">
+               <i mz-icon mz-input-prefix
+                  [icon]="'phone'">
+               </i>
+               <input mz-input
+                  type="tel"
+                  [label]="'Phone Number'"
+                  [placeholder]="' '"
+                  formControlName="phone"
+                  />
+               <span class="error red-text" *ngIf="volunteerForm.get('phone').hasError">{{volunteerForm.get('phone').errorMessage}}</span>
+            </mz-input-container>
+         </div>
+
+         <div class="row">
+            <!-- Ranked Areas of Interest -->
+            <div class="col s12"> <!-- this outer div is needed for select element labels to work well with the error message space span element -->
+               <mz-select-container>
+                  <select mz-select
+                     formControlName="ranked_aoi"
+                     [label]="'What areas would you like to serve in? Select the options in order of your preference'"
+                     [placeholder]="' '"
+                     multiple
+                     >
+                     <option *ngFor="let area of aoi" [value]="area">{{area}}</option>
+                  </select>
+               </mz-select-container>
+               <span class="error red-text" *ngIf="volunteerForm.get('ranked_aoi').hasError">{{volunteerForm.get('ranked_aoi').errorMessage}}</span>
+            </div>
+         </div>
+      </div>
+
+      <!-- == Emergency Contact == -->
+      <div formGroupName="emergency" class="card-panel">
+         <h4 class="center-align">Emergency Contact</h4>
+         
+         <div class="row">
+            <!-- first name -->
+            <mz-input-container class="col s12 m6">
+               <input mz-input
+                  type="text"
+                  [label]="'First Name'"
+                  [placeholder]="' '"
+                  formControlName="first_name"
+                  />
+               <span class="error red-text" *ngIf="volunteerForm.get('emergency').get('first_name').hasError">{{volunteerForm.get('emergency').get('first_name').errorMessage}}</span>
+            </mz-input-container>
+            <!-- last name -->
+            <mz-input-container class="col s12 m6">
+               <input mz-input
+                  type="text"
+                  [label]="'Last Name'"
+                  [placeholder]="' '"
+                  formControlName="last_name"
+                  />
+               <span class="error red-text" *ngIf="volunteerForm.get('emergency').get('last_name').hasError">{{volunteerForm.get('emergency').get('last_name').errorMessage}}</span>
+            </mz-input-container>         
+         </div>
+
+         <div class="row">
+            <!-- relationship to child -->
+            <mz-input-container class="col s12 m6">
+               <input mz-input
+                  type="text"
+                  [label]="'Relationship to volunteer'"
+                  [placeholder]="' '"
+                  formControlName="relationship"
+                  />
+               <span class="error red-text" *ngIf="volunteerForm.get('emergency').get('relationship').hasError">{{volunteerForm.get('emergency').get('relationship').errorMessage}}</span>
+            </mz-input-container>
+            <!-- phone -->
+            <mz-input-container class="col s12 m6">
+               <i mz-icon mz-input-prefix
+                  [icon]="'phone'">
+               </i>
+               <input mz-input
+                  type="tel"
+                  [label]="'Phone Number'"
+                  [placeholder]="' '"
+                  formControlName="phone"
+                  />
+               <span class="error red-text" *ngIf="volunteerForm.get('emergency').get('phone').hasError">{{volunteerForm.get('emergency').get('phone').errorMessage}}</span>
+            </mz-input-container>
+         </div>
+      </div>
+   </form>
+</div>
+<div id="submit-container" class="center-align">
+   <p class="red-text" *ngIf="volunteerForm.invalid">Please fill in all required fields correctly</p>
+   <p class="green-text" *ngIf="!volunteerForm.invalid">Looks good!</p>
+   <p *ngIf="submissionInProgress">
+      <mz-spinner
+         [color]="'blue'"
+         [size]="'small'"
+         >
+      </mz-spinner>
+   </p>
+   <button mz-button
+      type="submit"
+      (click)="onSubmit()"
+      [disabled]="volunteerForm.invalid"
+      >Submit <i class="material-icons right">send</i></button>
+</div>
