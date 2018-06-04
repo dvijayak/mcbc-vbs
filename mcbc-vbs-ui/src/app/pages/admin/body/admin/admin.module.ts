@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { AdminComponent } from './admin.component';
 import { DatatableComponent } from './datatable/datatable.component';
-import { SubmissionService } from './submission.service';
 import { IntercomService } from './intercom.service';
 import { NgArrayPipesModule, NgObjectPipesModule } from 'ngx-pipes';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
@@ -23,7 +22,6 @@ import { ImportMaterializeModule } from '../../../../import-materialize.module';
         NgxDatatableModule
     ],
     providers: [
-        SubmissionService,
         IntercomService
     ],
     exports: [

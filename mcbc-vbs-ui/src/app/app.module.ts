@@ -11,6 +11,7 @@ import { HomePageModule } from './pages/home/home-page.module';
 import { LoginPageModule } from './pages/login/login-page.module';
 import { AdminPageModule } from './pages/admin/admin-page.module';
 import { AppRoutingModule } from './app-routing.module';
+import { SubmissionService } from './submission/submission.service';
 
 @NgModule({
     declarations: [
@@ -28,7 +29,8 @@ import { AppRoutingModule } from './app-routing.module';
     ],
     providers: [
         { provide: 'AppConfigFilePath', useValue: 'assets/app.config.json' },
-        AppConfigService
+        AppConfigService,
+        SubmissionService
     ],
     bootstrap: [AppComponent]
 })

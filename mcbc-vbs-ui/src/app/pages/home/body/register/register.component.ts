@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 
-import { SubmissionOptions, SubmissionService } from '../../../admin/body/admin/submission.service';
+import { SubmissionOptions, SubmissionService } from '../../../../submission/submission.service';
 import { MzToastService } from 'ng2-materialize';
 
 import { CanadianProvince, CANADIANPROVINCES, CustomValidators, FormInputPostProcessors } from '../helper';

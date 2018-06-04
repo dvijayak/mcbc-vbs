@@ -1,17 +1,16 @@
-import { Component, OnInit, OnChanges } from '@angular/core';
-import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
+import { Component, OnChanges, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { SubmissionOptions, SubmissionService } from '../../../admin/body/admin/submission.service';
+import { SubmissionOptions, SubmissionService } from '../../../../submission/submission.service';
 import { MzToastService } from 'ng2-materialize';
 
-import { CanadianProvince, CANADIANPROVINCES, AREASOFINTEREST, CustomValidators, FormInputPostProcessors } from '../helper';
+import { AREASOFINTEREST, CanadianProvince, CANADIANPROVINCES, CustomValidators, FormInputPostProcessors } from '../helper';
 import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-volunteer',
     templateUrl: './volunteer.component.html',
-    styleUrls: ['./volunteer.component.css'],
-    providers: [SubmissionService]
+    styleUrls: ['./volunteer.component.css']
 })
 export class VolunteerComponent implements OnInit, OnChanges {
 

@@ -6,7 +6,7 @@ import {
     MzIconModule,
     MzInputModule,
     MzNavbarModule, MzSelectModule,
-    MzSidenavModule, MzSpinnerModule, MzTextareaModule
+    MzSidenavModule, MzSpinnerModule, MzTextareaModule, MzToastService
 } from 'ng2-materialize';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -29,6 +29,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
         MzCheckboxModule,
         MzTextareaModule,
         MzSpinnerModule
+    ],
+    providers: [
+        MzToastService
     ],
     exports: [
         BrowserAnimationsModule,

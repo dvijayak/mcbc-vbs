@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { SafeUrl, DomSanitizer } from '@angular/platform-browser';
 
-import { SubmissionOptions, SubmissionService } from '../submission.service';
+import { SubmissionOptions, SubmissionService } from '../../../../../submission/submission.service';
 import { AppConfigService } from '../../../../../config/app-config.service';
 import { BehaviorSubject } from 'rxjs';
 
