@@ -1,16 +1,19 @@
 import { Injectable, SecurityContext } from '@angular/core';
-import { Headers, Http, Response } from '@angular/http';
 import { DomSanitizer } from '@angular/platform-browser';
+import { AppConfigService } from '../config/app-config.service';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, ReplaySubject } from 'rxjs';
+
+import 'rxjs/add/operator/mergeMap';
 
 export class SubmissionOptions {
-    serverUrl: string; // includes the protocol
+    serverUrl = ''; // includes the protocol; by default, localhost
     query: string;
     pretty: boolean;
     data: any;
 
-    constructor(serverUrl: string, query: string, options: any) {
+    constructor(query: string, options: any) {
         // Required
-        this.serverUrl = serverUrl;
         this.query = query;
 
         // Optional
@@ -33,8 +36,18 @@ export class SubmissionOptions {
 @Injectable()
 export class SubmissionService {
 
-    constructor(private http: Http,
-                private _sanitizer: DomSanitizer) {
+    private _serverUrl$ = new ReplaySubject<string>(1);
+
+    constructor(private _http: HttpClient,
+                private _sanitizer: DomSanitizer,
+                private _appConfigService: AppConfigService) {
+        this._appConfigService.appConfig$.subscribe(config => {
+            if (config.serverUrl) {
+                this._serverUrl$.next(config.serverUrl);
+            } else {
+                console.error('No `serverUrl` was configured. Cannot access data from server.');
+            }
+        });
     }
 
     private processData(data) {
@@ -55,40 +68,45 @@ export class SubmissionService {
         }
 
         // We are good to go!
-        return Promise.resolve(data);
+        return data;
     }
 
     // The result must be an array of submissions
-    public getSubmissions(options: SubmissionOptions): Promise<any> {
-        const url = this._sanitizer.sanitize(SecurityContext.URL, options.createUrl());
-
-        const headers = new Headers();
-        headers.append('Content-Type', 'application/json');
-        headers.append('Accept', 'application/json');
-
-        return this.http.get(url, {
-            headers: headers,
-            withCredentials: true // needed for CORS request cookies to work
-        })
-            .map((res: Response) => res.json().data || {})
-            .toPromise()
-            .then(this.processData)
-            .catch(err => console.error(`Failed to retrieve submissions from server: ${err}`));
+    public getSubmissions(options: SubmissionOptions): Observable<any> {
+        return this._serverUrl$
+            .mergeMap(serverUrl => {
+                options.serverUrl = serverUrl;
+                const url = this._sanitizer.sanitize(SecurityContext.URL, options.createUrl());
+                const headers = new HttpHeaders({
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                });
+                return this._http.get<any>(url, {
+                    headers: headers,
+                    withCredentials: true // needed for CORS request cookies to work
+                }).map(json => json.data || {});
+            })
+            .map(data => this.processData(data))
+            // catch and rethrow just so that we can log failures here before consumers deal with it
+            .catch(err => {
+                console.error(`Failed to retrieve submissions from server: ${err}`)
+                throw err;
+            });
     }
 
-    public putSubmission (options: SubmissionOptions): Promise<any> {
-        const url = this._sanitizer.sanitize(SecurityContext.URL, options.createUrl());
-
-        const headers = new Headers();
-        headers.append('Content-Type', 'application/json');
-
-        // CANIMPROVE: attach API token
-
-        return this.http.put(url, options.data, {
-            headers: headers,
-            withCredentials: true // needed for CORS request cookies to work
-        })
-            .map((res: Response) => res.json().data || {})
-            .toPromise();
+    public putSubmission(options: SubmissionOptions): Observable<any> {
+        return this._serverUrl$
+            .mergeMap(serverUrl => {
+                options.serverUrl = serverUrl;
+                const url = this._sanitizer.sanitize(SecurityContext.URL, options.createUrl());
+                const headers = new HttpHeaders({
+                    'Content-Type': 'application/json'
+                });
+                // CANIMPROVE: support API tokens
+                return this._http.put<any>(url, options.data, {
+                    headers: headers,
+                    withCredentials: true // needed for CORS request cookies to work
+                }).map(json => json.data || {});
+            });
     }
 }

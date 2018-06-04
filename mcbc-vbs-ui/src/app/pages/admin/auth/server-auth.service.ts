@@ -4,7 +4,6 @@ import { AppConfigService } from '../../../config/app-config.service';
 import { Observable, ReplaySubject } from 'rxjs';
 
 import 'rxjs/add/observable/of';
-import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/mergeMap';
 

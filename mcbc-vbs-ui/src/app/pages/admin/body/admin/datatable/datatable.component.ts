@@ -5,8 +5,8 @@ import { SubmissionOptions, SubmissionService } from '../../../../../submission/
 import { AppConfigService } from '../../../../../config/app-config.service';
 import { BehaviorSubject } from 'rxjs';
 
-const objectValues = (obj => Object.keys(obj).map(key => obj[key])); // courtesy of
-                                                                     // http://stackoverflow.com/questions/7306669/how-to-get-all-properties-values-of-a-javascript-object-without-knowing-the-key/16643074#16643074
+// TODO: why do I have this here if I apparently am not using this anywhere?
+const objectValues = (obj => Object.keys(obj).map(key => obj[key])); // courtesy of http://stackoverflow.com/questions/7306669/how-to-get-all-properties-values-of-a-javascript-object-without-knowing-the-key/16643074#16643074
 
 /// Model representing submissions (children/volunteers)
 class DataModel {
@@ -25,12 +25,7 @@ export class DatatableComponent implements OnInit, OnChanges {
     public csvDataUri: SafeUrl = '#!';
     public csvExportFilename = 'data.csv';
 
-    private _serverUrl = '';
-
-    private _ready$ = new BehaviorSubject<boolean>(false);
-
-    constructor(private submissionService: SubmissionService,
-                private _appConfigService: AppConfigService,
+    constructor(private _submissionService: SubmissionService,
                 private _sanitizer: DomSanitizer) {
     }
 
@@ -39,15 +34,6 @@ export class DatatableComponent implements OnInit, OnChanges {
     @Input() filters: string[] = [];
 
     ngOnInit() {
-        this._appConfigService.appConfig$.subscribe(config => {
-            if (config.serverUrl) {
-                this._serverUrl = config.serverUrl;
-                this._ready$.next(true); // notify
-            } else {
-                console.error('No `serverUrl` was configured. Cannot access data from server.');
-            }
-        });
-
         // Since ngOnChanges is guaranteed to be called before ngOnInit upon initialization
         // as per the Angular lifecycle hooks design, we don't need to initialize the data
         // model here, thus saving us one expensive HTTP request.
@@ -77,30 +63,23 @@ export class DatatableComponent implements OnInit, OnChanges {
 
 
     private refreshModel(fetch: boolean): void {
-        this._ready$.subscribe(isReady => {
-            if (isReady) {
-                // 1. retrieve submissions from server, if requested
-                Promise.resolve(fetch)
-                    .then(fetch => {
-                        if (fetch) {
-                            return this.submissionService.getSubmissions(new SubmissionOptions(this._serverUrl, this.query, {
-                                pretty: true
-                            })).then(this.updateDataModel.bind(this));
-                        } else {
-                            return Promise.resolve();
-                        }
-                    })
-                    .then(() => {
-                        // 2. apply any filters
-                        // TODO
+        // 1. retrieve submissions from server, if requested
+        if (fetch) {
+            this._submissionService.getSubmissions(new SubmissionOptions(this.query, {
+                pretty: true
+            })).subscribe(data => {
+                    // 2. Update the model with the new data
+                    this.updateDataModel(data);
 
-                        // 3. reflect these changes where relevant
-                        this.csvDataUri = this.generateCSVDataUriFromModel();
-                        this.csvExportFilename = `MCBC_VBS_2018_SubmissionsCSVExport_${this.query}_${new Date().toDateString()}.csv`;
-                        // TODO: Configure prefix string
-                    });
-            }
-        });
+                    // 3. apply any filters
+                    // TODO
+            }, null, () => {
+                // 3. reflect these changes where relevant
+                this.csvDataUri = this.generateCSVDataUriFromModel();
+                this.csvExportFilename = `MCBC_VBS_2018_SubmissionsCSVExport_${this.query}_${new Date().toDateString()}.csv`;
+                // CANIMPROVE: Configure prefix string
+            });
+        }
     }
 
     private updateDataModel(data) {

@@ -3,6 +3,8 @@ import { CanActivate, Router } from '@angular/router';
 import { ServerAuthService } from '../admin/auth/server-auth.service';
 import { Observable } from 'rxjs';
 
+import 'rxjs/add/operator/take';
+
 /**
  * Redirects to the admin page if the user is already logged in
  */

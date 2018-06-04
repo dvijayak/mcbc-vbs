@@ -1,9 +1,16 @@
+/// Useful types ///
+
+export interface ToastOptions {
+    class: string;
+    message: string;
+}
+
 /// Provinces of Canada ///
 
 export class CanadianProvince {
-   name: string
-   shortname: string
-};
+   name: string;
+   shortname: string;
+}
 
 export const CANADIANPROVINCES: CanadianProvince[] = [
    {name: "Ontario", shortname: "ON"},

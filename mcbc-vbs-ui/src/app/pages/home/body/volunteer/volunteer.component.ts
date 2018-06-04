@@ -1,23 +1,26 @@
-import { Component, OnChanges, OnInit } from '@angular/core';
+import { Component, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { SubmissionOptions, SubmissionService } from '../../../../submission/submission.service';
 import { MzToastService } from 'ng2-materialize';
 
-import { AREASOFINTEREST, CanadianProvince, CANADIANPROVINCES, CustomValidators, FormInputPostProcessors } from '../helper';
+import { AREASOFINTEREST, CanadianProvince, CANADIANPROVINCES, CustomValidators, FormInputPostProcessors, ToastOptions } from '../helper';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 
 @Component({
     selector: 'app-volunteer',
     templateUrl: './volunteer.component.html',
     styleUrls: ['./volunteer.component.css']
 })
-export class VolunteerComponent implements OnInit, OnChanges {
+export class VolunteerComponent implements OnInit, OnDestroy {
 
     public readonly provinces: CanadianProvince[] = CANADIANPROVINCES;
     public readonly aoi: string[] = AREASOFINTEREST;
 
     public volunteerForm: FormGroup;
+
+    private _redirectTimer: any;
 
     /**
      * Used to show progress indications when posting data to the server
@@ -75,9 +78,6 @@ export class VolunteerComponent implements OnInit, OnChanges {
         });
     }
 
-    ngOnChanges() {
-    }
-
     onSubmit(): void {
         // Construct submission and send over to the server to be stored in the DB
         const formData = this.volunteerForm.value;
@@ -99,26 +99,36 @@ export class VolunteerComponent implements OnInit, OnChanges {
 
         // Submit away!
         const name = `${submission['first_name']} ${submission['last_name']}`;
-        const toastOptions = {
-            class: `green`,
-            message: `You, ${name}, have successfully signed up to be a crew member for VBS 2017!`
-        }; // assume success by default
         const toastDelay = 10;
-        this.submissionService.putSubmission(new SubmissionOptions('http://localhost:3000', 'volunteer', {
+        this.submissionService.putSubmission(new SubmissionOptions('volunteer', {
             data: submission
         }))
+            .map(data => { // we assume any OK-ish response to be a success :-)
+                return {
+                    class: `green`,
+                    message: `You, ${name}, have successfully signed up to be a crew member for VBS 2017!`
+                };
+            })
             .catch(err => {
                 console.error(`Failed to put submission into the server: ${err}`);
 
-                toastOptions.class = `red`;
-                toastOptions.message = `Oops, we were unable to process your volunteer registration, ${name}. Please try again later!`;
+                return Observable.of({ // failure :-(
+                    class: `red`,
+                    message: `Oops, we were unable to process your volunteer registration, ${name}. Please try again later!`
+                });
             })
-            // finally, notify the user of the result
-            .then(() => {
+            .subscribe((toastOptions: ToastOptions) => {
+                // Finally, notify the user of the result
                 this.toastService.show(toastOptions.message, toastDelay * 1000, toastOptions.class);
                 this.submissionInProgress = false;
                 this.toastService.show(`All done! You will be automatically redirected to the homepage in ${toastDelay} seconds...`, toastDelay * 1000, 'blue');
-                setTimeout(() => this._router.navigateByUrl('/'), toastDelay * 1000);
+                this._redirectTimer = setTimeout(() => this._router.navigateByUrl('/'), toastDelay * 1000);
             });
+    }
+
+    public ngOnDestroy(): void {
+        // When the component is destroyed (ex: premature page navigation), we want to
+        // cancel the redirection timer. Otherwise the page will automatically re-route against the user's desire
+        clearTimeout(this._redirectTimer);
     }
 }

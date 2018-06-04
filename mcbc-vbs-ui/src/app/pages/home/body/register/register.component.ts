@@ -1,13 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { SubmissionOptions, SubmissionService } from '../../../../submission/submission.service';
 import { MzToastService } from 'ng2-materialize';
 
-import { CanadianProvince, CANADIANPROVINCES, CustomValidators, FormInputPostProcessors } from '../helper';
-import { AppConfigService } from '../../../../config/app-config.service';
-import { ReplaySubject } from 'rxjs';
+import { CanadianProvince, CANADIANPROVINCES, CustomValidators, FormInputPostProcessors, ToastOptions } from '../helper';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 
 const MAX_CHILDREN = 5; // CANIMPROVE: get this from some configuration var?
 
@@ -16,7 +15,7 @@ const MAX_CHILDREN = 5; // CANIMPROVE: get this from some configuration var?
     templateUrl: './register.component.html',
     styleUrls: ['./register.component.css']
 })
-export class RegisterComponent implements OnInit {
+export class RegisterComponent implements OnInit, OnDestroy {
 
     public provinces: CanadianProvince[] = CANADIANPROVINCES;
     public readonly maxChildren: number = MAX_CHILDREN;
@@ -25,23 +24,15 @@ export class RegisterComponent implements OnInit {
 
     public submissionInProgress = false;
 
-    private _serverUrl$ = new ReplaySubject<string>(1);
+    private _redirectTimer: any;
 
     constructor(private _router: Router,
                 private _formBuilder: FormBuilder,
                 private _submissionService: SubmissionService,
-                private _toastService: MzToastService,
-                private _appConfigService: AppConfigService) {
-        this._appConfigService.appConfig$.subscribe(config => {
-            if (config.serverUrl) {
-                this._serverUrl$.next(config.serverUrl);
-            } else {
-                console.error('No `serverUrl` was configured. Cannot access data from server.');
-            }
-        });
+                private _toastService: MzToastService) {
     }
 
-    ngOnInit() {
+    public ngOnInit(): void {
         // Create the form
         this.childForm = this._formBuilder.group({
             parent: this._formBuilder.group({
@@ -69,7 +60,7 @@ export class RegisterComponent implements OnInit {
         this.addChild(); // keep one child form ready
 
         // Apply validator observers for each control
-        for (let group in this.childForm.controls) {
+        for (const group in this.childForm.controls) {
             CustomValidators.applyControlChangesValidationHandler(this.childForm.controls[group]);
         }
 
@@ -139,81 +130,92 @@ export class RegisterComponent implements OnInit {
     }
 
     onSubmit(): void {
-        this._serverUrl$.subscribe(url => {
-            this.submissionInProgress = true;
+        this.submissionInProgress = true;
 
-            // Construct submissions based on the number of children in the form model, then
-            // send over to the server to be stored in the DB
-            const formData = this.childForm.value;
-            const totalSubmissions = formData.children.length;
-            let i = 0;
-            formData.children.forEach(child => {
-                const submission = {};
+        // Construct submissions based on the number of children in the form model, then
+        // send over to the server to be stored in the DB
+        const formData = this.childForm.value;
+        const totalSubmissions = formData.children.length;
+        let i = 0;
+        formData.children.forEach(child => {
+            const submission = {};
 
-                // Parent
-                for (let prop in formData.parent)
-                    if (['address',
-                        'is_photo_allowed',
-                        'is_photo_public_use_allowed',
-                    ].find(el => prop === el))
-                        submission[prop] = formData.parent[prop];
-                    else
-                        submission[`parent_${prop}`] = formData.parent[prop];
+            // Parent
+            for (const prop in formData.parent) {
+                if (['address',
+                    'is_photo_allowed',
+                    'is_photo_public_use_allowed',
+                ].find(el => prop === el)) {
+                    submission[prop] = formData.parent[prop];
+                } else {
+                    submission[`parent_${prop}`] = formData.parent[prop];
+                }
+            }
 
-                // Emergency
-                for (let prop in formData.emergency)
-                    submission[`emergency_${prop}`] = formData.emergency[prop];
+            // Emergency
+            for (const prop in formData.emergency) {
+                submission[`emergency_${prop}`] = formData.emergency[prop];
+            }
 
-                // Child
-                for (let prop in child)
-                    submission[prop] = child[prop];
+            // Child
+            for (const prop in child) {
+                submission[prop] = child[prop];
+            }
 
-                // Clean the input just before submitting
-                submission['parent_phone'] = FormInputPostProcessors.phone(submission['parent_phone']);
-                submission['emergency_phone'] = FormInputPostProcessors.phone(submission['emergency_phone']);
-                submission['address']['postal_code'] = FormInputPostProcessors.postal_code(submission['address']['postal_code']);
+            // Clean the input just before submitting
+            submission['parent_phone'] = FormInputPostProcessors.phone(submission['parent_phone']);
+            submission['emergency_phone'] = FormInputPostProcessors.phone(submission['emergency_phone']);
+            submission['address']['postal_code'] = FormInputPostProcessors.postal_code(submission['address']['postal_code']);
 
-                // Submit away!
-                const name = `${submission['first_name']} ${submission['last_name']}`;
-                const toastOptions = {
-                    class: `green`,
-                    message: `Your child ${name} has been successfully registered for VBS!`
-                }; // assume success by default
-                const toastDelay = 10;
-                this._submissionService.putSubmission(new SubmissionOptions(url, 'child', {
-                    data: submission
-                }))
-                    .then((data) => {
-                        if (data.is_in_waiting_list &&
-                            (data.is_in_waiting_list.toString().toLowerCase() == 'yes' ||
-                                data.is_in_waiting_list.toString().toLowerCase() == 'true')
-                        ) {
-                            toastOptions.class = `orange`;
-                            toastOptions.message = `We're full...but do not despair! Your child ${name} has been registered on our waiting list. We will promptly contact you if more room is made available.`;
-                            return Promise.resolve();
-                        }
-                    })
-                    .catch(err => {
-                        console.error(`Failed to put submission into the server: ${err}`);
+            // Submit away!
+            const name = `${submission['first_name']} ${submission['last_name']}`;
+            const toastDelay = 10;
+            this._submissionService.putSubmission(new SubmissionOptions('child', {
+                data: submission
+            }))
+                .map(data => {
+                    if (data.is_in_waiting_list &&
+                        (data.is_in_waiting_list.toString().toLowerCase() === 'yes' ||
+                            data.is_in_waiting_list.toString().toLowerCase() === 'true')) {
+                        return { // waiting list :-|
+                            class: `orange`,
+                            message: `We're full...but do not despair! Your child ${name} has been registered on our waiting list. We will promptly contact you if more room is made available.`
+                        };
+                    } else { // success! :-)
+                        return {
+                            class: `green`,
+                            message: `Your child ${name} has been successfully registered for VBS!`
+                        };
+                    }
+                })
+                .catch(err => {
+                    console.error(`Failed to put submission into the server: ${err}`);
 
-                        toastOptions.class = `red`;
-                        toastOptions.message = `Oops, we were unable to process the registration of your child ${name}. Please try again later!`;
-                    })
-                    // finally, notify the user of the result
-                    .then(() => {
-                        this._toastService.show(toastOptions.message, toastDelay * 1000, toastOptions.class);
-
-                        i++;
-
-                        // Special handling for the very last submission
-                        if (i == totalSubmissions) {
-                            this.submissionInProgress = false;
-
-                            this._toastService.show(`All done! You will be automatically redirected to the homepage in ${toastDelay} seconds...`, toastDelay * 1000, 'blue');
-                            setTimeout(() => this._router.navigateByUrl('/'), toastDelay * 1000);
-                        }
+                    return Observable.of({ // failure :-(
+                        class: `red`,
+                        message: `Oops, we were unable to process the registration of your child ${name}. Please try again later!`
                     });
-            });
+                })
+                .subscribe((toastOptions: ToastOptions) => {
+                    // Finally, notify the user of the result
+                    this._toastService.show(toastOptions.message, toastDelay * 1000, toastOptions.class);
+
+                    i++;
+
+                    // Special handling for the very last submission
+                    if (i === totalSubmissions) {
+                        this.submissionInProgress = false;
+
+                        this._toastService.show(`All done! You will be automatically redirected to the homepage in ${toastDelay} seconds...`, toastDelay * 1000, 'blue');
+                        this._redirectTimer = setTimeout(() => this._router.navigateByUrl('/'), toastDelay * 1000);
+                    }
+                });
         });
+    }
+
+    public ngOnDestroy(): void {
+        // When the component is destroyed (ex: premature page navigation), we want to
+        // cancel the redirection timer. Otherwise the page will automatically re-route against the user's desire
+        clearTimeout(this._redirectTimer);
     }
 }
