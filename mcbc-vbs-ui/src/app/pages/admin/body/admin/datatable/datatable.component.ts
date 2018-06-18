@@ -83,17 +83,17 @@ export class DatatableComponent implements OnInit, OnChanges {
     }
 
     private updateDataModel(data) {
-        if (!data || Object.keys(data).length === 0) {
+        if (data == null) {
             return;
         }
 
         // Note: change detection will be triggered
 
-        this.model.submissions = data.submissions;
+        this.model.submissions = data.submissions || [];
 
         // Transform headers into ngx-datatable format
         this.model.headers = [];
-        for (const prop of Object.keys(data.headers)) {
+        for (const prop of Object.keys(data.headers || {})) {
             this.model.headers.push({
                 prop: prop,
                 name: data.headers[prop],
