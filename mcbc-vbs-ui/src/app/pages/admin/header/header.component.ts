@@ -7,8 +7,6 @@ import { AppConfigService } from '../../../config/app-config.service';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 
-import 'rxjs/add/operator/finally'; // for some reason, TSC is complaining unless this is explicitly imported as such
-
 @Component({
     selector: 'app-admin-page-header',
     templateUrl: './header.component.html',
@@ -40,7 +38,7 @@ export class HeaderComponent {
             if (url) {
                 this._http.post(`${url}/logout`, null, {
                     withCredentials: true // needed for CORS request cookies to work
-                }).finally(() => this._router.navigateByUrl('/')).subscribe();
+                }).subscribe(() => this._router.navigateByUrl('/'));
             }
         });
     }
