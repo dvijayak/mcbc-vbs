@@ -83,8 +83,9 @@ export class DatatableComponent implements OnInit, OnChanges {
     }
 
     private updateDataModel(data) {
-        if (!data)
+        if (!data || Object.keys(data).length === 0) {
             return;
+        }
 
         // Note: change detection will be triggered
 
