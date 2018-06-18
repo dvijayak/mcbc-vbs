@@ -106,7 +106,7 @@ export class VolunteerComponent implements OnInit, OnDestroy {
             .map(data => { // we assume any OK-ish response to be a success :-)
                 return {
                     class: `green`,
-                    message: `You, ${name}, have successfully signed up to be a crew member for VBS 2017!`
+                    message: `You, ${name}, have successfully signed up to be a crew member for VBS!`
                 };
             })
             .catch(err => {
