@@ -9,6 +9,7 @@
         "ng": "ng",
         "start": "ng serve $npm_package_config_project --poll 2000 --progress --watch --port 4200",
         "build": "ng build $npm_package_config_project",
+        "build:prod": "ng build $npm_package_config_project --prod --aot",
         "build:serve": "cd dist/$npm_package_config_project && lite-server",
         "dev": "run-s build setup:inotify build:serve",
         "clean": "rimraf dist",
