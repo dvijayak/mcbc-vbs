@@ -68,13 +68,13 @@ export class DatatableComponent implements OnInit, OnChanges {
             this._submissionService.getSubmissions(new SubmissionOptions(this.query, {
                 pretty: true
             })).subscribe(data => {
-                    // 2. Update the model with the new data
-                    this.updateDataModel(data);
+                // 2. Update the model with the new data
+                this.updateDataModel(data);
 
-                    // 3. apply any filters
-                    // TODO
-            }, null, () => {
-                // 3. reflect these changes where relevant
+                // 3. apply any filters
+                // TODO
+
+                // 4. reflect these changes where relevant
                 this.csvDataUri = this.generateCSVDataUriFromModel();
                 this.csvExportFilename = `MCBC_VBS_2018_SubmissionsCSVExport_${this.query}_${new Date().toDateString()}.csv`;
                 // CANIMPROVE: Configure prefix string
