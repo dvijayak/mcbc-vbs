@@ -8,78 +8,72 @@
        </div>
    </div>
 
+   <div class="divider"></div>
+
    <!-- Event details + FAQ-->
    <div class="section">
       <div class="row">
          <div class="col s12">
-            <div class="card-panel">
+            <div class="row">
                <!-- Event: when -->
-               <div class="row">
-                  <!-- Labels -->
-                  <div class="col s12 m4">
-                     <p class="flow-text center-align"><span style="font-weight: bold;">When</span></p>
-                  </div>
-                  <!-- Values -->
-                  <div class="col s12 m8">
-                     <p class="flow-text center-align">9 am to 12 pm, August 13 to 17</p>
-                  </div>
+               <div class="col s12 m6">
+                  <h3 class="center-align pink-text text-mcbc">When</h3>
+                  <p class="flow-text center-align">9 am to 12 pm, <b>August 13 to 17</b></p>
                </div>
                <!-- Event: where -->
-               <div class="row">
-                  <!-- Labels -->
-                  <div class="col s12 m4">
-                     <p class="flow-text center-align"><span style="font-weight: bold;">Where</span></p>
-                  </div>
-                  <!-- Values -->
-                  <div class="col s12 m8">
-                     <p class="flow-text center-align"><a href="http://mcbc.org">Mississauga City Baptist Church</a></p>
-                  </div>
+               <div class="col s12 m6">
+                  <h3 class="center-align pink-text text-mcbc">Where</h3>
+                  <p class="flow-text center-align"><a href="http://mcbc.org">Mississauga City Baptist Church</a></p>
                </div>
-               <!-- Event: where (map) -->
-               <div class="row">
-                  <div class="col s12">
-                     <iframe width="100%" height="300" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?q=place_id:ChIJ_2jmlAxHK4gR2ZWnY8NWyWI&key=AIzaSyCSOGe1okNlO4A7_ehqWOYBTuLHi3TPL5A" allowfullscreen></iframe>
-                  </div>
-               </div>
-
-               <!-- Link to FAQ -->
-               <div class="center-align">
-                  <a mz-button [routerLink]="['/faq']">Frequently Asked Questions</a>
+            </div>
+            <!-- Event: where (map) -->
+            <div class="row">
+               <div class="col s12">
+                  <iframe width="100%" height="300" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?q=place_id:ChIJ_2jmlAxHK4gR2ZWnY8NWyWI&key=AIzaSyCSOGe1okNlO4A7_ehqWOYBTuLHi3TPL5A" allowfullscreen></iframe>
                </div>
             </div>
          </div>
       </div>
    </div>
-   <!-- <div class="divider"></div> -->
 
-   <!-- Register -->
+   <div class="divider"></div>
+
+   <!-- FAQ, Register, Volunteer -->
    <div class="section">
       <div class="row">
-         <div class="col s12">
-            <div class="card-panel">
-               <h3 class="center-align pink-text text-mcbc">Register your children</h3>
-               <p class="flow-text">Join us this summer as children entering JK through sixth grade get ready to discover not only that God made them the way they are, but for a purpose too. Maker Fun Factory VBS will be filled with incredible Bible-Learning experiences kids see, hear, touch and even taste! Sciency-Fun Gizmos, team-building games, cool Bible songs and tasty treats are just a few of the standout activities that children will experience this year at VBS.</p>
-               <p class="flow-text"><b>Registration closes on August 5th, 2018</b></p>
-               <div class="center-align">
-                  <a mz-button [routerLink]="['/register']">Register</a>
-               </div>
+         <div class="col s12 m4">
+            <h3 class="center-align pink-text text-mcbc">Sign up</h3>
+            <p class="flow-text">Join us on an adventure as children entering <em>JK through sixth grade</em> are anchored in the truth that Jesus will carry them through life's storms.</p>
+            <div class="center-align">
+               <a mz-button [routerLink]="['/register']">Register</a>
+            </div>
+         </div>
+         <div class="col s12 m4">
+            <h3 class="center-align pink-text text-mcbc">Help out</h3>
+            <p class="flow-text">Want to make a difference in the life of a child this summer? We've got plenty of fun ways for you to serve!</p>
+            <div class="center-align">
+               <a mz-button [routerLink]="['/volunteer']">Volunteer</a>
+            </div>
+         </div>
+         <div class="col s12 m4">
+            <h3 class="center-align pink-text text-mcbc">Got questions?</h3>
+            <p class="flow-text">Check out our Frequently Asked Questions before you give us a call</p>
+            <!-- Link to FAQ -->
+            <div class="center-align">
+               <a mz-button [routerLink]="['/faq']">FAQ</a>
             </div>
          </div>
       </div>
    </div>
-   <!-- <div class="divider"></div> -->
 
-   <!-- Volunteer -->
+   <div class="divider"></div>
+
+   <!-- Deadline -->
    <div class="section">
       <div class="row">
          <div class="col s12">
-            <div class="card-panel">
-               <h3 class="center-align pink-text text-mcbc">Help out</h3>
-               <p class="flow-text">Join us this summer for VBS 2018 as we help kids understand that they are made by God, made for a relationship with Jesus, and made to love others! You can make a difference in the life of a child. We've got a spot for you!</p>
-               <div class="center-align">
-                  <a mz-button [routerLink]="['/volunteer']">Volunteer</a>
-               </div>
-            </div>
+            <h3 class="center-align pink-text text-mcbc">Registration deadline</h3>
+            <p class="flow-text center-align"><b>August 5th, 2018</b></p>
          </div>
       </div>
    </div>
